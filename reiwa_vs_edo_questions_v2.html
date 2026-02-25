@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>令和脳 vs 江戸脳｜あなたの思考OSチェック</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;700;900&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #C8860A;
+  --gold-pale: #f5e6c8;
+  --ink: #1a1208;
+  --teal: #8FD9DA;
+  --teal-dim: rgba(143,217,218,0.12);
+  --text-main: #f0e4cc;
+  --text-sub: #a08c6a;
+  --text-dim: #5a4a2a;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: var(--ink);
+  color: var(--text-main);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse at 15% 40%, rgba(200,134,10,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 30%, rgba(143,217,218,0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background-image: radial-gradient(circle, rgba(200,134,10,0.08) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* ========== ヘッダー ========== */
+.header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  padding: 14px 32px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid rgba(200,134,10,0.15);
+  background: rgba(26,18,8,0.92);
+  backdrop-filter: blur(12px);
+}
+.header-logo {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 13px; font-weight: 700;
+  letter-spacing: 0.15em;
+  background: linear-gradient(90deg, var(--teal), var(--gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.header-progress-text {
+  font-size: 12px; color: var(--text-dim);
+  letter-spacing: 0.1em;
+}
+
+/* ========== プログレスバー ========== */
+.progress-bar-wrap {
+  position: fixed; top: 49px; left: 0; right: 0; z-index: 49;
+  height: 3px;
+  background: rgba(200,134,10,0.1);
+}
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(to right, var(--teal), var(--gold));
+  transition: width 0.4s ease;
+  width: 0%;
+}
+
+/* ========== メインコンテナ ========== */
+.main {
+  position: relative; z-index: 1;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 100px 20px 80px;
+}
+
+/* ========== カテゴリーバッジ ========== */
+.category-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 5px 16px;
+  border: 1px solid rgba(200,134,10,0.25);
+  border-radius: 2px;
+  background: rgba(200,134,10,0.06);
+  font-size: 11px; letter-spacing: 0.3em;
+  color: var(--gold);
+  margin-bottom: 28px;
+  transition: all 0.3s;
+}
+
+/* ========== 問番号 ========== */
+.question-num {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 13px; color: var(--text-dim);
+  letter-spacing: 0.3em;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.question-num span { color: var(--gold); font-size: 20px; font-weight: 700; }
+
+/* ========== 質問カード ========== */
+.question-card {
+  width: 100%; max-width: 640px;
+  text-align: center;
+}
+
+.question-text {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(17px, 3.5vw, 22px);
+  font-weight: 700;
+  line-height: 1.9;
+  color: var(--text-main);
+  margin-bottom: 48px;
+  min-height: 80px;
+  transition: opacity 0.3s;
+}
+
+/* ========== 選択肢 ========== */
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.choice-btn {
+  width: 100%;
+  padding: 16px 24px;
+  background: rgba(200,134,10,0.04);
+  border: 1px solid rgba(200,134,10,0.2);
+  border-radius: 2px;
+  color: var(--text-sub);
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  display: flex; align-items: center; gap: 16px;
+  position: relative; overflow: hidden;
+}
+
+.choice-btn::before {
+  content: '';
+  position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--gold);
+  transform: scaleY(0);
+  transition: transform 0.2s;
+}
+
+.choice-btn:hover {
+  border-color: rgba(200,134,10,0.5);
+  background: rgba(200,134,10,0.08);
+  color: var(--text-main);
+}
+.choice-btn:hover::before { transform: scaleY(1); }
+
+.choice-btn.selected {
+  border-color: var(--gold);
+  background: rgba(200,134,10,0.12);
+  color: var(--gold-pale);
+}
+.choice-btn.selected::before { transform: scaleY(1); }
+
+.choice-score {
+  width: 28px; height: 28px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+  flex-shrink: 0; opacity: 0.6;
+  transition: opacity 0.2s;
+}
+.choice-btn:hover .choice-score,
+.choice-btn.selected .choice-score { opacity: 1; }
+
+.choice-label { flex: 1; line-height: 1.6; }
+
+/* ========== ナビゲーション ========== */
+.nav-btns {
+  display: flex; gap: 12px; justify-content: center;
+  align-items: center;
+}
+
+.btn-prev {
+  padding: 12px 28px;
+  background: transparent;
+  border: 1px solid rgba(200,134,10,0.25);
+  border-radius: 2px;
+  color: var(--text-dim);
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 13px; cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.1em;
+}
+.btn-prev:hover {
+  border-color: rgba(200,134,10,0.5);
+  color: var(--text-sub);
+}
+.btn-prev:disabled { opacity: 0.2; cursor: default; }
+
+.btn-next {
+  padding: 14px 40px;
+  background: linear-gradient(135deg, #C8860A, #9A6508);
+  border: none; border-radius: 2px;
+  color: #fff;
+  font-family: 'Noto Serif JP', serif;
+  font-size: 15px; font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  letter-spacing: 0.15em;
+  box-shadow: 0 4px 20px rgba(200,134,10,0.3);
+  opacity: 0.4; pointer-events: none;
+}
+.btn-next.active {
+  opacity: 1; pointer-events: auto;
+}
+.btn-next.active:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(200,134,10,0.5);
+}
+
+/* ========== カテゴリー区切り演出 ========== */
+.category-transition {
+  display: none;
+  position: fixed; inset: 0; z-index: 100;
+  background: var(--ink);
+  flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+}
+.category-transition.show { display: flex; }
+.ct-num {
+  font-size: 11px; letter-spacing: 0.4em;
+  color: var(--teal); margin-bottom: 16px;
+}
+.ct-name {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 36px; font-weight: 900;
+  color: var(--text-main); margin-bottom: 16px;
+}
+.ct-desc {
+  font-size: 13px; color: var(--text-sub);
+  max-width: 400px; line-height: 1.9;
+}
+.ct-bar {
+  width: 1px; height: 60px;
+  background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+  margin: 32px auto 0;
+  animation: ctBarGrow 0.8s ease forwards;
+}
+@keyframes ctBarGrow {
+  from { height: 0; opacity: 0; }
+  to { height: 60px; opacity: 1; }
+}
+
+/* ========== フェードアニメ ========== */
+.fade-slide {
+  animation: fadeSlide 0.35s ease forwards;
+}
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* ========== 完了画面 ========== */
+.complete-screen {
+  display: none;
+  position: fixed; inset: 0; z-index: 90;
+  background: var(--ink);
+  flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; padding: 40px 20px;
+}
+.complete-screen.show { display: flex; }
+.complete-kamon {
+  width: 80px; height: 80px;
+  border: 2px solid var(--gold);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 32px;
+  animation: kamonGlow 3s ease-in-out infinite;
+}
+.complete-kamon-icon { font-size: 32px; }
+@keyframes kamonGlow {
+  0%,100% { box-shadow: 0 0 15px rgba(200,134,10,0.2); }
+  50% { box-shadow: 0 0 35px rgba(200,134,10,0.5); }
+}
+.complete-title {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 28px; font-weight: 900;
+  color: var(--text-main); margin-bottom: 12px;
+}
+.complete-sub {
+  font-size: 14px; color: var(--text-sub);
+  margin-bottom: 40px; line-height: 1.8;
+}
+.btn-result {
+  display: inline-flex; align-items: center; gap: 12px;
+  padding: 18px 52px;
+  background: linear-gradient(135deg, var(--teal), #5ab8ba);
+  border: none; border-radius: 2px;
+  color: var(--ink);
+  font-family: 'Noto Serif JP', serif;
+  font-size: 17px; font-weight: 900;
+  cursor: pointer; letter-spacing: 0.1em;
+  box-shadow: 0 4px 24px rgba(143,217,218,0.35);
+  transition: all 0.3s;
+}
+.btn-result:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 40px rgba(143,217,218,0.5);
+}
+
+/* レスポンシブ */
+@media (max-width: 600px) {
+  .header { padding: 14px 16px; }
+  .choice-btn { padding: 14px 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ヘッダー -->
+<header class="header">
+  <div class="header-logo">令和脳 vs 江戸脳</div>
+  <div class="header-progress-text" id="progressText">1 / 18</div>
+</header>
+
+<!-- プログレスバー -->
+<div class="progress-bar-wrap">
+  <div class="progress-bar-fill" id="progressBar"></div>
+</div>
+
+<!-- メイン -->
+<main class="main">
+  <div class="question-card" id="questionCard">
+    <div class="category-badge" id="categoryBadge"></div>
+    <div class="question-num">問 <span id="qNum">1</span> / 18</div>
+    <p class="question-text" id="questionText"></p>
+    <div class="choices" id="choices"></div>
+    <div class="nav-btns">
+      <button class="btn-prev" id="btnPrev" onclick="prevQuestion()" disabled>← 戻る</button>
+      <button class="btn-next" id="btnNext" onclick="nextQuestion()">次へ →</button>
+    </div>
+  </div>
+</main>
+
+<!-- 完了画面 -->
+<div class="complete-screen" id="completeScreen">
+  <div class="complete-kamon">
+    <span class="complete-kamon-icon">🏯</span>
+  </div>
+  <h2 class="complete-title">チェック完了</h2>
+  <p class="complete-sub">
+    全18問、お疲れさまでした。<br>
+    あなたの思考OSを解析しています…
+  </p>
+  <button class="btn-result" onclick="goToResult()">
+    結果を見る →
+  </button>
+</div>
+
+<script>
+const CATEGORIES = [
+  {
+    id: 1, name: "権威服従",
+    desc: "権威あるものを絶対視し、自分で判断することを避ける傾向を見ます。",
+    questions: [
+      "親には、逆らわずに従ってきた方だと思います。",
+      "上司の指示、「なんか違う気がする…」と思っても、ぐっと飲み込んで従ってしまいます。",
+      "お奉行所（上司・先輩）からのお達しがないと、次に何をすればいいか不安になってしまいます。",
+    ]
+  },
+  {
+    id: 2, name: "集団同調",
+    desc: "周囲と違う行動を取ることに抵抗を感じる傾向を見ます。",
+    questions: [
+      "会議で「みんなと違う意見」を言おうとすると、心臓がドキドキしてしまいます。",
+      "「和を乱したらどうしよう…」と、常に場の空気を読みながら生きています。",
+      "職場にまだ残っている人がいると、自分だけさっさと帰るのが悪いことのように感じます。",
+    ]
+  },
+  {
+    id: 3, name: "課題の混同",
+    desc: "他人の問題を背負い込む、または自分の考えを強要する傾向を見ます。",
+    questions: [
+      "親の機嫌が悪いと、「自分が何かしてしもんたんかも…」と焦ってしまいます。",
+      "お代官様（上司）に頼まれると、どうしても断れず、引き受けてしまいます。",
+      "子どもに「こうあるべき」と、気づけば自分の正解を押しつけていることがあります。",
+    ]
+  },
+  {
+    id: 4, name: "自己否定",
+    desc: "自分自身を否定的に捉え、自己価値を認められない傾向を見ます。",
+    questions: [
+      "褒めてもらっても、「いやいや、自分なんてたいしたことないですから…」と打ち消してしまいます。",
+      "「これがしたい！」と思っても、「そんなわがまま言うたらあかん」と、自分で自分を止めてしまいます。",
+      "ちょっとしたミスをすると、「やっぱり自分はあかんたれや…」と、どっと落ち込んでしまいます。",
+    ]
+  },
+  {
+    id: 5, name: "完璧主義",
+    desc: "完璧でなければならないというプレッシャーが強い傾向を見ます。",
+    questions: [
+      "失敗したり、みっともない姿を人に見られたりするのが、とても怖いと感じます。",
+      "80点を取っても、「なんで残りの20点が取れへんかったんや…」と、そっちが気になってしまいます。",
+      "「もう少し準備ができてから」「万全になってから」と思い、なかなか動き出せないことがあります。",
+    ]
+  },
+  {
+    id: 6, name: "認知の硬直性",
+    desc: "一度決めたルールに固執し、柔軟に対応できない傾向を見ます。",
+    questions: [
+      "一度決めたルールは、状況が変わっても守り続けるべきだと感じます。",
+      "計画通りにいかないと、頭が真っ白になってパニックになってしまうことがあります。",
+      "「〜すべき」「〜しなければならない」という考え方が、頭の中に多い気がします。",
+    ]
+  }
+];
+
+const CHOICES = [
+  { score: 1, label: "全然ないわ" },
+  { score: 2, label: "あんまりないかな" },
+  { score: 3, label: "まあ、そうかも" },
+  { score: 4, label: "わかる、ある" },
+  { score: 5, label: "めっちゃある、これ私や" },
+];
+
+// カテゴリーの順番をシャッフル（カテゴリー内の質問順は保つ）
+function shuffleCategories(arr) {
+  const shuffled = [...arr];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+// シャッフルされたカテゴリー順でフラットな質問リストを作る
+const SHUFFLED_CATEGORIES = shuffleCategories(CATEGORIES);
+const ALL_QUESTIONS = [];
+SHUFFLED_CATEGORIES.forEach(cat => {
+  cat.questions.forEach((q, i) => {
+    ALL_QUESTIONS.push({ catId: cat.id, catName: cat.name, catDesc: cat.desc, text: q, indexInCat: i });
+  });
+});
+
+let currentIdx = 0;
+let answers = new Array(ALL_QUESTIONS.length).fill(null);
+let selectedScore = null;
+
+function render() {
+  const q = ALL_QUESTIONS[currentIdx];
+  const total = ALL_QUESTIONS.length;
+
+  // プログレス
+  const pct = (currentIdx / total) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `${currentIdx + 1} / ${total}`;
+  document.getElementById('qNum').textContent = currentIdx + 1;
+
+  // カテゴリーバッジ：カテゴリー名は非表示、番号のみ
+  const catOrder = SHUFFLED_CATEGORIES.findIndex(c => c.id === q.catId) + 1;
+  document.getElementById('categoryBadge').textContent = `Q${currentIdx + 1}`;
+
+  // 質問文
+  const qText = document.getElementById('questionText');
+  qText.classList.remove('fade-slide');
+  void qText.offsetWidth;
+  qText.classList.add('fade-slide');
+  qText.textContent = q.text;
+
+  // 選択肢
+  const choicesEl = document.getElementById('choices');
+  choicesEl.innerHTML = '';
+  CHOICES.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn' + (answers[currentIdx] === c.score ? ' selected' : '');
+    btn.innerHTML = `
+      <span class="choice-score">${c.score}</span>
+      <span class="choice-label">${c.label}</span>
+    `;
+    btn.onclick = () => selectAnswer(c.score);
+    choicesEl.appendChild(btn);
+  });
+
+  // 次へボタン
+  selectedScore = answers[currentIdx];
+  updateNextBtn();
+
+  // 戻るボタン
+  document.getElementById('btnPrev').disabled = currentIdx === 0;
+
+  // 最終問かどうか
+  const nextBtn = document.getElementById('btnNext');
+  nextBtn.textContent = currentIdx === total - 1 ? '結果を見る →' : '次へ →';
+}
+
+function selectAnswer(score) {
+  answers[currentIdx] = score;
+  selectedScore = score;
+  document.querySelectorAll('.choice-btn').forEach((btn, i) => {
+    btn.classList.toggle('selected', CHOICES[i].score === score);
+  });
+  updateNextBtn();
+
+  // 選択したら少し待って自動で次へ（UX向上）
+  setTimeout(() => {
+    if (answers[currentIdx] !== null) nextQuestion();
+  }, 400);
+}
+
+function updateNextBtn() {
+  const btn = document.getElementById('btnNext');
+  btn.classList.toggle('active', selectedScore !== null);
+}
+
+function nextQuestion() {
+  if (answers[currentIdx] === null) return;
+  const total = ALL_QUESTIONS.length;
+
+  if (currentIdx === total - 1) {
+    showComplete();
+    return;
+  }
+
+  currentIdx++;
+  render();
+}
+
+function prevQuestion() {
+  if (currentIdx === 0) return;
+  currentIdx--;
+  render();
+}
+
+function showComplete() {
+  document.getElementById('progressBar').style.width = '100%';
+  document.getElementById('completeScreen').classList.add('show');
+}
+
+function goToResult() {
+  // スコア計算
+  const catScores = {};
+  CATEGORIES.forEach(cat => {
+    catScores[cat.id] = { name: cat.name, total: 0, count: 0 };
+  });
+
+  ALL_QUESTIONS.forEach((q, i) => {
+    const score = answers[i] || 3;
+    catScores[q.catId].total += score;
+    catScores[q.catId].count++;
+  });
+
+  const totalScore = ALL_QUESTIONS.reduce((sum, q, i) => sum + (answers[i] || 3), 0);
+  const maxScore = ALL_QUESTIONS.length * 5; // 90
+  const edoPct = Math.round((totalScore / maxScore) * 100);
+  const reiwaPct = 100 - edoPct;
+
+  const result = { edoPct, reiwaPct, catScores, answers };
+  sessionStorage.setItem('checkResult', JSON.stringify(result));
+
+  location.href = 'reiwa_vs_edo_result_v2.html';
+}
+
+// 初期化
+render();
+</script>
+</body>
+</html>

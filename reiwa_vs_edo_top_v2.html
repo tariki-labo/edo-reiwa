@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>令和脳 vs 江戸脳｜あなたの思考OSチェック</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;700;900&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #C8860A;
+  --gold-light: #e8a82a;
+  --gold-pale: #f5e6c8;
+  --gold-dim: rgba(200,134,10,0.15);
+  --ink: #1a1208;
+  --ink-mid: #2a1e0e;
+  --text-main: #f0e4cc;
+  --text-sub: #a08c6a;
+  --text-dim: #5a4a2a;
+  /* 令和カラー（書籍カバーのティール） */
+  --teal: #8FD9DA;
+  --teal-dark: #5ab8ba;
+  --teal-dim: rgba(143,217,218,0.15);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: var(--ink);
+  color: var(--text-main);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* 和紙テクスチャ風背景 */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse at 15% 40%, rgba(200,134,10,0.08) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 30%, rgba(143,217,218,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(143,217,218,0.04) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* ドットパターン */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background-image: radial-gradient(circle, rgba(200,134,10,0.12) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* ========== HEADER ========== */
+.header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  padding: 16px 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid rgba(200,134,10,0.15);
+  background: rgba(26,18,8,0.85);
+  backdrop-filter: blur(12px);
+}
+.header-logo {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 16px; font-weight: 700;
+  letter-spacing: 0.2em;
+  background: linear-gradient(90deg, var(--teal), var(--gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.header-nav {
+  display: flex; align-items: center; gap: 24px;
+}
+.header-nav a {
+  font-size: 14px; color: var(--text-sub);
+  text-decoration: none; letter-spacing: 0.1em;
+  transition: color 0.2s;
+}
+.header-nav a:hover { color: var(--gold); }
+
+/* ========== HERO ========== */
+.hero {
+  position: relative; z-index: 1;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 100px 20px 80px;
+  text-align: center;
+}
+
+/* 背景の大きな家紋文字 */
+.hero-bg-text {
+  position: absolute;
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 900;
+  color: rgba(200,134,10,0.04);
+  pointer-events: none; user-select: none;
+  line-height: 1;
+}
+.hero-bg-text.edo {
+  font-size: 320px;
+  top: 50%; left: -60px;
+  transform: translateY(-50%);
+  writing-mode: vertical-rl;
+}
+.hero-bg-text.reiwa {
+  font-size: 320px;
+  top: 50%; right: -60px;
+  transform: translateY(-50%);
+  writing-mode: vertical-rl;
+}
+
+/* 上部：家紋風シンボル */
+.kamon {
+  width: 110px; height: 110px;
+  border: 2px solid var(--gold);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 36px;
+  position: relative;
+  animation: kamonGlow 4s ease-in-out infinite;
+}
+.kamon::before {
+  content: '';
+  position: absolute; inset: 8px;
+  border: 1px solid rgba(200,134,10,0.35);
+  border-radius: 50%;
+}
+.kamon::after {
+  content: '';
+  position: absolute; inset: -8px;
+  border: 1px solid rgba(200,134,10,0.1);
+  border-radius: 50%;
+}
+.kamon-icon { font-size: 64px; line-height: 1; }
+
+@keyframes kamonGlow {
+  0%, 100% { box-shadow: 0 0 15px rgba(200,134,10,0.2), inset 0 0 15px rgba(200,134,10,0.05); }
+  50% { box-shadow: 0 0 35px rgba(200,134,10,0.4), inset 0 0 25px rgba(200,134,10,0.1); }
+}
+
+/* キャッチライン */
+.hero-catch {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 14px; font-weight: 500;
+  letter-spacing: 0.6em;
+  color: var(--teal);
+  margin-bottom: 24px;
+  text-transform: uppercase;
+}
+
+/* メインタイトル */
+.hero-title {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 900;
+  line-height: 1.15;
+  margin-bottom: 16px;
+  position: relative;
+}
+.hero-title-main {
+  font-size: clamp(40px, 9vw, 76px);
+  color: var(--text-main);
+  display: block;
+}
+.hero-title-reiwa { color: var(--teal); }
+.hero-title-vs {
+  font-size: clamp(24px, 5vw, 40px);
+  color: var(--text-dim); margin: 0 16px;
+}
+.hero-title-edo { color: var(--gold); }
+.hero-title-sub-line {
+  font-size: clamp(16px, 3.5vw, 24px);
+  color: var(--text-sub);
+  letter-spacing: 0.25em;
+  display: block; margin-top: 12px;
+}
+
+/* 区切り線 */
+.hero-divider {
+  display: flex; align-items: center; gap: 16px;
+  margin: 28px auto;
+  max-width: 400px;
+}
+.hero-divider-line {
+  flex: 1; height: 1px;
+  background: linear-gradient(to right, transparent, rgba(200,134,10,0.4), transparent);
+}
+.hero-divider-diamond {
+  width: 6px; height: 6px;
+  background: var(--gold);
+  transform: rotate(45deg);
+}
+
+/* 説明文 */
+.hero-desc {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(14px, 2.5vw, 16px);
+  line-height: 2.2;
+  color: var(--text-sub);
+  max-width: 520px;
+  margin: 0 auto 48px;
+}
+.hero-desc strong {
+  color: var(--gold-pale);
+  font-weight: 700;
+}
+
+/* スタートボタン */
+.btn-start-wrap {
+  position: relative; display: inline-block;
+}
+.btn-start {
+  display: inline-flex; align-items: center; gap: 16px;
+  padding: 20px 60px;
+  background: linear-gradient(135deg, #C8860A 0%, #9A6508 100%);
+  border: none; border-radius: 2px;
+  color: #fff;
+  font-family: 'Noto Serif JP', serif;
+  font-size: 20px; font-weight: 700;
+  letter-spacing: 0.15em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative; overflow: hidden;
+  box-shadow:
+    0 4px 24px rgba(200,134,10,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.15);
+}
+.btn-start::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 60%);
+}
+.btn-start::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%; width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  transition: left 0.6s ease;
+}
+.btn-start:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 40px rgba(200,134,10,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.btn-start:hover::after { left: 150%; }
+.btn-start:active { transform: translateY(0); }
+
+.btn-start-icon { font-size: 20px; }
+
+/* ボタン下のメモ */
+.btn-note {
+  margin-top: 14px;
+  font-size: 14px; color: var(--text-dim);
+  letter-spacing: 0.15em;
+}
+
+/* ========== インフォバー ========== */
+.info-bar {
+  display: flex; gap: 0;
+  justify-content: center;
+  margin-top: 56px;
+  border: 1px solid rgba(143,217,218,0.25);
+  border-radius: 2px;
+  overflow: hidden;
+  max-width: 480px;
+  width: 100%;
+}
+.info-item {
+  flex: 1; padding: 16px 20px;
+  text-align: center;
+  border-right: 1px solid rgba(143,217,218,0.15);
+  background: rgba(143,217,218,0.04);
+}
+.info-item:last-child { border-right: none; }
+.info-num {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 26px; font-weight: 900;
+  color: var(--teal); display: block;
+}
+.info-label {
+  font-size: 13px; color: var(--text-dim);
+  letter-spacing: 0.15em; margin-top: 4px;
+  display: block;
+}
+
+/* ========== セクション：チェック内容 ========== */
+.section {
+  position: relative; z-index: 1;
+  padding: 80px 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.section-title {
+  text-align: center;
+  font-family: 'Noto Serif JP', serif;
+  font-size: 13px; letter-spacing: 0.5em;
+  color: var(--teal);
+  margin-bottom: 48px;
+  display: flex; align-items: center; gap: 16px;
+}
+.section-title::before, .section-title::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(to right, transparent, rgba(143,217,218,0.3), transparent);
+}
+
+/* 6カテゴリー */
+.categories {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1px;
+  background: rgba(200,134,10,0.15);
+  border: 1px solid rgba(200,134,10,0.15);
+}
+.category-card {
+  background: rgba(26,18,8,0.9);
+  padding: 28px 24px;
+  transition: background 0.2s;
+  cursor: default;
+}
+.category-card:hover {
+  background: rgba(200,134,10,0.06);
+}
+.category-num {
+  font-size: 13px; color: var(--teal);
+  letter-spacing: 0.3em; margin-bottom: 10px;
+  font-family: 'Noto Serif JP', serif;
+}
+.category-name {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 20px; font-weight: 700;
+  color: var(--text-main); margin-bottom: 10px;
+}
+.category-desc {
+  font-size: 14px; color: var(--text-sub);
+  line-height: 1.8;
+}
+
+/* ========== 結果イメージ ========== */
+.result-preview {
+  position: relative; z-index: 1;
+  padding: 80px 20px;
+  background: rgba(200,134,10,0.03);
+  border-top: 1px solid rgba(200,134,10,0.1);
+  border-bottom: 1px solid rgba(200,134,10,0.1);
+}
+.result-preview-inner {
+  max-width: 600px; margin: 0 auto; text-align: center;
+}
+.result-score-demo {
+  display: flex; align-items: center; justify-content: center;
+  gap: 32px; margin: 40px 0;
+}
+.score-block {
+  text-align: center;
+}
+.score-pct {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 72px; font-weight: 900;
+  line-height: 1;
+}
+.score-pct.edo { color: var(--gold); }
+.score-pct.reiwa { color: var(--teal); }
+.score-era {
+  font-size: 15px; letter-spacing: 0.2em;
+  color: var(--text-sub); margin-top: 4px;
+}
+.score-vs {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 24px; color: var(--text-dim);
+}
+
+/* バー */
+.score-bar-wrap {
+  height: 8px;
+  background: rgba(200,134,10,0.1);
+  border-radius: 4px; overflow: hidden;
+  margin: 24px 0;
+}
+.score-bar-fill {
+  height: 100%;
+  background: linear-gradient(to right, var(--teal) 30%, var(--gold) 30%);
+  border-radius: 4px;
+  animation: barFill 1.5s ease-out;
+}
+@keyframes barFill {
+  from { transform: scaleX(0); transform-origin: left; }
+  to { transform: scaleX(1); }
+}
+
+/* ========== CTA（下部） ========== */
+.cta-bottom {
+  position: relative; z-index: 1;
+  text-align: center;
+  padding: 80px 20px 100px;
+}
+.cta-bottom-text {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(18px, 4vw, 28px);
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 8px;
+}
+.cta-bottom-sub {
+  font-size: 14px; color: var(--text-sub);
+  margin-bottom: 40px;
+}
+
+/* ========== FOOTER ========== */
+.footer {
+  position: relative; z-index: 1;
+  padding: 24px 40px;
+  border-top: 1px solid rgba(200,134,10,0.1);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px;
+}
+.footer-copy {
+  font-size: 13px; color: var(--text-dim);
+  letter-spacing: 0.1em;
+}
+.footer-links {
+  display: flex; gap: 20px;
+}
+.footer-links a {
+  font-size: 13px; color: var(--text-dim);
+  text-decoration: none; letter-spacing: 0.1em;
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--gold); }
+
+/* ========== 縦線装飾 ========== */
+.v-line {
+  position: fixed;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, rgba(200,134,10,0.2), transparent);
+  top: 0; bottom: 0; z-index: 0;
+}
+.v-line.left { left: 40px; }
+.v-line.right { right: 40px; }
+
+/* ========== アニメーション ========== */
+.fade-in {
+  opacity: 0; transform: translateY(20px);
+  animation: fadeIn 0.8s ease forwards;
+}
+.fade-in:nth-child(1) { animation-delay: 0.1s; }
+.fade-in:nth-child(2) { animation-delay: 0.25s; }
+.fade-in:nth-child(3) { animation-delay: 0.4s; }
+.fade-in:nth-child(4) { animation-delay: 0.55s; }
+.fade-in:nth-child(5) { animation-delay: 0.7s; }
+.fade-in:nth-child(6) { animation-delay: 0.85s; }
+
+@keyframes fadeIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* スクロール誘導 */
+.scroll-hint {
+  position: absolute; bottom: 32px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column;
+  align-items: center; gap: 8px;
+  animation: scrollBounce 2s ease-in-out infinite;
+}
+.scroll-hint-text { font-size: 12px; color: var(--text-dim); letter-spacing: 0.3em; }
+.scroll-hint-arrow { color: var(--gold); font-size: 18px; }
+@keyframes scrollBounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(8px); }
+}
+
+/* レスポンシブ */
+@media (max-width: 600px) {
+  .header { padding: 14px 20px; }
+  .v-line { display: none; }
+  .hero-bg-text { display: none; }
+  .footer { flex-direction: column; align-items: center; text-align: center; }
+  .hero-title-vs { margin: 0 10px; }
+}
+</style>
+</head>
+<body>
+
+<!-- 縦線装飾 -->
+<div class="v-line left"></div>
+<div class="v-line right"></div>
+
+<!-- ヘッダー -->
+<header class="header">
+  <div class="header-logo">令和脳 vs 江戸脳</div>
+  <nav class="header-nav">
+    <a href="#about">このチェックについて</a>
+    <a href="#categories">カテゴリー</a>
+    <a href="#cta">チェックをスタート</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-bg-text edo">江戸</div>
+  <div class="hero-bg-text reiwa">令和</div>
+
+  <div class="kamon fade-in">
+    <span class="kamon-icon">🏯</span>
+  </div>
+
+  <p class="hero-catch fade-in">思考OS チェック</p>
+
+  <h1 class="hero-title fade-in">
+    <span class="hero-title-main">
+      <span class="hero-title-reiwa">令和脳</span><span class="hero-title-vs">vs</span><span class="hero-title-edo">江戸脳</span>
+    </span>
+    <span class="hero-title-sub-line">あなたの思考OSチェック</span>
+  </h1>
+
+  <div class="hero-divider fade-in">
+    <div class="hero-divider-line"></div>
+    <div class="hero-divider-diamond"></div>
+    <div class="hero-divider-line"></div>
+  </div>
+
+  <p class="hero-desc fade-in">
+    「親に従え」「空気を読め」「我慢が美徳」——<br>
+    その<strong>「当たり前」</strong>、いつの時代のものですか？<br><br>
+    江戸幕府が仕込んだ思考の呪縛が、<br>
+    令和の今もあなたの脳内で動き続けているかもしれません。
+  </p>
+
+  <div class="fade-in">
+    <div class="btn-start-wrap">
+      <button class="btn-start" onclick="location.href='reiwa_vs_edo_questions_v2.html'">
+        <span class="btn-start-icon">🏯</span>
+        チェックをはじめる
+      </button>
+    </div>
+    <p class="btn-note">全18問・約3分・無料・回答は保存されません</p>
+  </div>
+
+  <div class="info-bar fade-in">
+    <div class="info-item">
+      <span class="info-num">18</span>
+      <span class="info-label">設問数</span>
+    </div>
+    <div class="info-item">
+      <span class="info-num">6</span>
+      <span class="info-label">カテゴリー</span>
+    </div>
+    <div class="info-item">
+      <span class="info-num">約3分</span>
+      <span class="info-label">所要時間</span>
+    </div>
+    <div class="info-item">
+      <span class="info-num">無料</span>
+      <span class="info-label">費用</span>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span class="scroll-hint-text">SCROLL</span>
+    <span class="scroll-hint-arrow">↓</span>
+  </div>
+</section>
+
+<!-- カテゴリー紹介 -->
+<section class="section" id="categories">
+  <div class="section-title">チェックカテゴリー</div>
+  <div class="categories">
+    <div class="category-card">
+      <div class="category-num">CAT. 01</div>
+      <div class="category-name">権威服従</div>
+      <div class="category-desc">権威あるものを絶対視し、<br>自分で判断することを避ける傾向</div>
+    </div>
+    <div class="category-card">
+      <div class="category-num">CAT. 02</div>
+      <div class="category-name">集団同調</div>
+      <div class="category-desc">周囲と違う行動を取ることに<br>抵抗を感じる傾向</div>
+    </div>
+    <div class="category-card">
+      <div class="category-num">CAT. 03</div>
+      <div class="category-name">課題の混同</div>
+      <div class="category-desc">他人の問題を背負い込む、<br>または自分の考えを強要する傾向</div>
+    </div>
+    <div class="category-card">
+      <div class="category-num">CAT. 04</div>
+      <div class="category-name">自己否定</div>
+      <div class="category-desc">自分自身を否定的に捉え、<br>自己価値を認められない傾向</div>
+    </div>
+    <div class="category-card">
+      <div class="category-num">CAT. 05</div>
+      <div class="category-name">完璧主義</div>
+      <div class="category-desc">完璧な自分でなければという<br>プライドが強い傾向</div>
+    </div>
+    <div class="category-card">
+      <div class="category-num">CAT. 06</div>
+      <div class="category-name">認知の硬直性</div>
+      <div class="category-desc">一度決めたルールに固執し、<br>柔軟に対応できない傾向</div>
+    </div>
+  </div>
+</section>
+
+<!-- 結果イメージ -->
+<section class="result-preview" id="about">
+  <div class="result-preview-inner">
+    <div class="section-title">チェック結果イメージ</div>
+    <p style="font-family:'Noto Serif JP',serif; color:var(--text-sub); font-size:14px; line-height:2;">
+      あなたの思考がどのくらい「江戸時代仕様」かを<br>
+      スコアで可視化します。
+    </p>
+    <div class="result-score-demo">
+      <div class="score-block">
+        <div class="score-pct reiwa">30<span style="font-size:36px">%</span></div>
+        <div class="score-era">令和脳</div>
+      </div>
+      <div class="score-vs">：</div>
+      <div class="score-block">
+        <div class="score-pct edo">70<span style="font-size:36px">%</span></div>
+        <div class="score-era">江戸脳</div>
+      </div>
+    </div>
+    <div class="score-bar-wrap">
+      <div class="score-bar-fill"></div>
+    </div>
+    <p style="font-size:15px; color:var(--text-sub); line-height:1.9; margin-top:16px;">
+      スコアに合わせた<strong style="color:var(--gold-pale)">あなたへのメッセージ</strong>と、<br>
+      6カテゴリーそれぞれの傾向もお伝えします。<br>
+      高スコアでも低スコアでも、それはあなたのせいではありません。
+    </p>
+  </div>
+</section>
+
+<!-- CTA（下部） -->
+<section class="cta-bottom" id="cta">
+  <div class="kamon" style="margin-bottom:32px;">
+    <span class="kamon-icon">🏯</span>
+  </div>
+  <p class="cta-bottom-text">さあ、あなたの思考OSを確認しましょう</p>
+  <p class="cta-bottom-sub">あなたの苦しさには、ちゃんと理由があります。</p>
+  <div class="btn-start-wrap">
+    <button class="btn-start" onclick="location.href='reiwa_vs_edo_questions_v2.html'">
+      <span class="btn-start-icon">🏯</span>
+      チェックをはじめる
+    </button>
+  </div>
+  <p class="btn-note">全18問・約3分・無料</p>
+</section>
+
+<!-- フッター -->
+<footer class="footer">
+  <p class="footer-copy">© 2026 NPO法人 他力本願研究所｜令和脳 vs 江戸脳 思考OSチェック</p>
+  <div class="footer-links">
+    <a href="#">プライバシーポリシー</a>
+    <a href="#">お問い合わせ</a>
+    <a href="#">書籍について</a>
+  </div>
+</footer>
+
+</body>
+</html>
