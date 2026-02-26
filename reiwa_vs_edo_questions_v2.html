@@ -4,12 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>令和脳 vs 江戸脳｜あなたの思考OSチェック</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏯</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;700;900&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
 :root {
   --gold: #C8860A;
   --gold-pale: #f5e6c8;
-  --ink: #ffffff;
+  --ink: #FAF6EE;
   --teal: #8FD9DA;
   --teal-dim: rgba(143,217,218,0.12);
   --text-main: #1a1208;
@@ -51,7 +52,7 @@ body::after {
   padding: 14px 32px;
   display: flex; align-items: center; justify-content: space-between;
   border-bottom: 1px solid rgba(200,134,10,0.15);
-  background: rgba(255,255,255,0.95);
+  background: rgba(250,246,238,0.95);
   backdrop-filter: blur(12px);
 }
 .header-logo {
@@ -67,6 +68,14 @@ body::after {
   font-size: 12px; color: var(--text-dim);
   letter-spacing: 0.1em;
 }
+.header-top-link {
+  font-size: 12px; color: var(--text-dim);
+  letter-spacing: 0.1em; text-decoration: none;
+  border: 1px solid rgba(200,134,10,0.2);
+  padding: 6px 12px; border-radius: 2px;
+  transition: all 0.2s;
+}
+.header-top-link:hover { color: var(--text-sub); border-color: rgba(200,134,10,0.4); }
 
 /* ========== プログレスバー ========== */
 .progress-bar-wrap {
@@ -339,6 +348,7 @@ body::after {
 <!-- ヘッダー -->
 <header class="header">
   <div class="header-logo">令和脳 vs 江戸脳</div>
+  <a href="reiwa_vs_edo_top_v2.html" class="header-top-link">🏠 TOP</a>
   <div class="header-progress-text" id="progressText">1 / 21</div>
 </header>
 
@@ -444,11 +454,11 @@ const CATEGORIES = [
 ];
 
 const CHOICES = [
-  { score: 1, label: "全然ないわ" },
+  { score: 1, label: "NO！　全然ないわ" },
   { score: 2, label: "あんまりないかな" },
   { score: 3, label: "まあ、そうかも" },
   { score: 4, label: "わかる、ある" },
-  { score: 5, label: "めっちゃある、これ私や" },
+  { score: 5, label: "YES！　めっちゃある、これ私や" },
 ];
 
 // カテゴリーの順番をシャッフル（カテゴリー内の質問順は保つ）

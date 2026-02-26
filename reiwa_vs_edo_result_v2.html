@@ -4,12 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>令和脳 vs 江戸脳｜チェック結果</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏯</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;700;900&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
 :root {
   --gold: #C8860A;
   --gold-pale: #f5e6c8;
-  --ink: #ffffff;
+  --ink: #FAF6EE;
   --teal: #8FD9DA;
   --teal-dark: #5ab8ba;
   --text-main: #1a1208;
@@ -42,7 +43,7 @@ body::after {
   padding: 14px 32px;
   display: flex; align-items: center; justify-content: space-between;
   border-bottom: 1px solid rgba(200,134,10,0.15);
-  background: rgba(255,255,255,0.95); backdrop-filter: blur(12px);
+  background: rgba(250,246,238,0.95); backdrop-filter: blur(12px);
 }
 .header-logo {
   font-family: 'Noto Serif JP', serif;
@@ -56,6 +57,13 @@ body::after {
   border-radius: 2px; transition: all 0.2s; cursor: pointer; background: none;
 }
 .header-retry:hover { color: var(--text-sub); border-color: rgba(200,134,10,0.4); }
+.header-top-link {
+  font-size: 12px; color: var(--text-dim); letter-spacing: 0.1em;
+  text-decoration: none; border: 1px solid rgba(200,134,10,0.2);
+  padding: 6px 12px; border-radius: 2px; transition: all 0.2s;
+}
+.header-top-link:hover { color: var(--text-sub); border-color: rgba(200,134,10,0.4); }
+.header-right { display: flex; align-items: center; gap: 8px; }
 
 .v-line {
   position: fixed; width: 1px;
@@ -362,7 +370,10 @@ body::after {
 
 <header class="header">
   <div class="header-logo">令和脳 vs 江戸脳</div>
-  <button class="header-retry" onclick="location.href='reiwa_vs_edo_questions_v2.html'">もう一度チェックする</button>
+  <div class="header-right">
+    <a href="reiwa_vs_edo_top_v2.html" class="header-top-link">🏠 TOP</a>
+    <button class="header-retry" onclick="location.href='reiwa_vs_edo_questions_v2.html'">もう一度チェックする</button>
+  </div>
 </header>
 
 <!-- スコア -->
@@ -390,7 +401,7 @@ body::after {
 
 <!-- レーダーチャート -->
 <section class="radar-section">
-  <div class="section-title">6カテゴリー傾向チャート</div>
+  <div class="section-title">7カテゴリー傾向チャート</div>
   <div class="radar-wrap">
     <canvas id="radarChart"></canvas>
   </div>
@@ -398,7 +409,7 @@ body::after {
 
 <div class="divider"><div class="divider-line"></div><div class="divider-diamond"></div><div class="divider-line"></div></div>
 
-
+<section class="pattern-section">
   <div class="section-title">あなたの特徴</div>
   <div class="top-cats" id="topCats"></div>
   <div class="pattern-card" id="patternCard"></div>
@@ -926,7 +937,6 @@ function render() {
 
   if (edoPct <= 40) {
     patternSection.innerHTML = `
-      <div class="section-title">あなたの特徴</div>
       <p style="font-family:'Noto Serif JP',serif; font-size:15px; color:var(--text-sub); line-height:2.2; text-align:center; padding: 20px 0;">
         朱子学OSの影響は比較的小さいようです。<br>
         ただ、周囲にはこうした思考で苦しんでいる人がいるかもしれません。<br>
@@ -994,14 +1004,12 @@ function animateCount(id, target) {
 function shareX() {
   const result = getResult();
   const zone = ZONES.find(z => result.edoPct >= z.min && result.edoPct <= z.max) || ZONES[1];
-  const text = `あなたの鬱は、徳川家康のせいです。\n\n令和脳 vs 江戸脳｜思考OSチェックをやってみました！\n\n令和脳 ${result.reiwaPct}% ／ 江戸脳 ${result.edoPct}%\n診断結果：${zone.badge}\n\nあなたの思考OSは何年製？\nhttps://example.com/check\n#令和脳江戸脳 #思考OSチェック #朱子学ハラスメント #朱子ハラ`;
+  const text = `あなたの鬱は、徳川家康のせいです。\n\n令和脳 vs 江戸脳｜思考OSチェックをやってみました！\n\n令和脳 ${result.reiwaPct}% ／ 江戸脳 ${result.edoPct}%\n診断結果：${zone.badge}\n\nあなたの思考OSは何年製？\nhttps://maegawashinsuke3.github.io/edo-reiwa-check/\n#令和脳江戸脳 #思考OSチェック #朱子学ハラスメント #朱子ハラ`;
   window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank');
 }
 
 function copyResult() {
-  const result = getResult();
-  const text = `【令和脳 vs 江戸脳 思考OSチェック結果】\n令和脳 ${result.reiwaPct}% ／ 江戸脳 ${result.edoPct}%\n\nあなたの思考OSは何年製？無料チェックはこちら👇\nhttps://example.com/check`;
-  navigator.clipboard.writeText(text).then(() => {
+  navigator.clipboard.writeText(window.location.href).then(() => {
     const el = document.getElementById('shareCopied');
     el.classList.add('show');
     setTimeout(() => el.classList.remove('show'), 2500);
@@ -1099,7 +1107,7 @@ function drawInstaCanvas(canvas, result, zone) {
   // URL
   ctx.font = `22px 'Noto Sans JP', sans-serif`;
   ctx.fillStyle = 'rgba(143,217,218,0.6)';
-  ctx.fillText('https://example.com/check', S / 2, 830);
+  ctx.fillText('https://maegawashinsuke3.github.io/edo-reiwa-check/', S / 2, 830);
 }
 
 function initInstaCanvas() {
@@ -1123,7 +1131,7 @@ function downloadInstaImage() {
 function copyInstaCaption() {
   const result = getResult();
   const zone = ZONES.find(z => result.edoPct >= z.min && result.edoPct <= z.max) || ZONES[1];
-  const text = `あなたの鬱は、徳川家康のせいです。\n\n令和脳 vs 江戸脳｜思考OSチェックをやってみました！\n\n令和脳 ${result.reiwaPct}% ／ 江戸脳 ${result.edoPct}%\n診断結果：${zone.badge}\n\nあなたの思考OSは何年製？\nhttps://example.com/check\n.\n#令和脳江戸脳 #思考OSチェック #朱子学ハラスメント #朱子ハラ #生きづらさ #朱子学OS`;
+  const text = `あなたの鬱は、徳川家康のせいです。\n\n令和脳 vs 江戸脳｜思考OSチェックをやってみました！\n\n令和脳 ${result.reiwaPct}% ／ 江戸脳 ${result.edoPct}%\n診断結果：${zone.badge}\n\nあなたの思考OSは何年製？\nhttps://maegawashinsuke3.github.io/edo-reiwa-check/\n.\n#令和脳江戸脳 #思考OSチェック #朱子学ハラスメント #朱子ハラ #生きづらさ #朱子学OS`;
   navigator.clipboard.writeText(text).then(() => {
     const el = document.getElementById('instaCaptionCopied');
     el.classList.add('show');
