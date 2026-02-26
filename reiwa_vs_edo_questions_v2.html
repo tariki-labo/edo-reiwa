@@ -11,8 +11,8 @@
   --gold: #C8860A;
   --gold-pale: #f5e6c8;
   --ink: #FAF6EE;
-  --teal: #8FD9DA;
-  --teal-dim: rgba(143,217,218,0.12);
+  --teal: #5ab8ba;
+  --teal-dim: rgba(90,184,186,0.12);
   --text-main: #1a1208;
   --text-sub: #5a4a2a;
   --text-dim: #a08c6a;
@@ -257,6 +257,7 @@ body::after {
 .ct-num {
   font-size: 11px; letter-spacing: 0.4em;
   color: var(--teal); margin-bottom: 16px;
+  background: rgba(0,178,169,0.07); padding: 6px 16px; border-radius: 2px;
 }
 .ct-name {
   font-family: 'Noto Serif JP', serif;
@@ -454,11 +455,11 @@ const CATEGORIES = [
 ];
 
 const CHOICES = [
-  { score: 1, label: "NO！　全然ないわ" },
-  { score: 2, label: "あんまりないかな" },
-  { score: 3, label: "まあ、そうかも" },
-  { score: 4, label: "わかる、ある" },
-  { score: 5, label: "YES！　めっちゃある、これ私や" },
+  { score: 0,   label: "NO！　そんなん全然ないわ" },
+  { score: 25,  label: "あんまりないかな" },
+  { score: 50,  label: "まあ、そうかも" },
+  { score: 75,  label: "わかる、ある" },
+  { score: 100, label: "YES！　めっちゃある、これ私や" },
 ];
 
 // カテゴリーの順番をシャッフル（カテゴリー内の質問順は保つ）
@@ -582,14 +583,13 @@ function goToResult() {
   });
 
   ALL_QUESTIONS.forEach((q, i) => {
-    const score = answers[i] || 3;
+    const score = answers[i] ?? 50;
     catScores[q.catId].total += score;
     catScores[q.catId].count++;
   });
 
-  const totalScore = ALL_QUESTIONS.reduce((sum, q, i) => sum + (answers[i] || 3), 0);
-  const maxScore = ALL_QUESTIONS.length * 5; // 100
-  const edoPct = Math.round((totalScore / maxScore) * 100);
+  const totalScore = ALL_QUESTIONS.reduce((sum, q, i) => sum + (answers[i] ?? 50), 0);
+  const edoPct = Math.round(totalScore / ALL_QUESTIONS.length);
   const reiwaPct = 100 - edoPct;
 
   const result = { edoPct, reiwaPct, catScores, answers };

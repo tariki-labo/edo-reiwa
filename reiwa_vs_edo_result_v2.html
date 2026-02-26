@@ -11,8 +11,8 @@
   --gold: #C8860A;
   --gold-pale: #f5e6c8;
   --ink: #FAF6EE;
-  --teal: #8FD9DA;
-  --teal-dark: #5ab8ba;
+  --teal: #5ab8ba;
+  --teal-dark: #3d9ea0;
   --text-main: #1a1208;
   --text-sub: #5a4a2a;
   --text-dim: #a08c6a;
@@ -84,6 +84,7 @@ body::after {
   font-size: 15px; letter-spacing: 0.4em; color: var(--teal);
   margin-bottom: 40px;
   display: flex; align-items: center; gap: 16px; justify-content: center;
+  background: rgba(0,178,169,0.07); padding: 10px 20px; border-radius: 2px;
 }
 .result-label::before, .result-label::after {
   content: ''; width: 60px; height: 1px;
@@ -166,6 +167,7 @@ body::after {
   font-size: 15px; letter-spacing: 0.4em; color: var(--teal);
   margin-bottom: 32px;
   display: flex; align-items: center; gap: 16px;
+  background: rgba(0,178,169,0.07); padding: 10px 16px; border-radius: 2px;
 }
 .section-title::before, .section-title::after {
   content: ''; flex: 1; height: 1px;
@@ -183,7 +185,7 @@ body::after {
   background: rgba(200,134,10,0.06);
   border-radius: 2px; text-align: center;
 }
-.top-cat-rank { font-size: 10px; color: var(--teal); letter-spacing: 0.3em; margin-bottom: 6px; display: block; }
+.top-cat-rank { font-size: 10px; color: var(--teal); letter-spacing: 0.3em; margin-bottom: 6px; display: block; background: rgba(0,178,169,0.07); padding: 4px 8px; border-radius: 2px; }
 .top-cat-name { font-family: 'Noto Serif JP', serif; font-size: 18px; font-weight: 900; color: var(--gold-pale); }
 
 /* 15パターン抽象文 */
@@ -916,7 +918,7 @@ function render() {
   // カテゴリースコアを降順ソート
   const catArray = Object.entries(catScores).map(([id, cs]) => ({
     id: parseInt(id), name: CAT_NAMES[parseInt(id)] || CAT_NAMES[id] || cs.name,
-    pct: Math.round((cs.total / (cs.count * 5)) * 100)
+    pct: Math.round(cs.total / cs.count)
   })).sort((a, b) => b.pct - a.pct);
 
   const top1 = catArray[0];
@@ -926,7 +928,7 @@ function render() {
   const catLabels = ['権威服従', '集団同調', '課題の混同', '自己否定', '完璧主義', '認知の硬直性', '恥の文化・世間体'];
   const radarData = catLabels.map((_, i) => {
     const cs = catScores[i + 1] || catScores[String(i + 1)] || { total: 0, count: 3 };
-    return Math.round((cs.total / (cs.count * 5)) * 100);
+    return Math.round(cs.total / cs.count);
   });
 
   drawRadarChart('radarChart', catLabels, radarData);
@@ -1069,7 +1071,7 @@ function drawInstaCanvas(canvas, result, zone) {
 
   // スコア表示
   ctx.font = `900 140px 'Noto Serif JP', serif`;
-  ctx.fillStyle = '#8FD9DA';
+  ctx.fillStyle = '#5ab8ba';
   ctx.fillText(result.reiwaPct + '%', S / 2 - 200, 520);
   ctx.fillStyle = 'rgba(90,70,40,0.8)';
   ctx.font = `bold 48px 'Noto Serif JP', serif`;
@@ -1080,7 +1082,7 @@ function drawInstaCanvas(canvas, result, zone) {
 
   // ラベル
   ctx.font = `28px 'Noto Sans JP', sans-serif`;
-  ctx.fillStyle = '#8FD9DA';
+  ctx.fillStyle = '#5ab8ba';
   ctx.fillText('令和脳', S / 2 - 200, 570);
   ctx.fillStyle = '#C8860A';
   ctx.fillText('江戸脳', S / 2 + 200, 570);

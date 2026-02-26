@@ -18,9 +18,9 @@
   --text-sub: #5a4a2a;
   --text-dim: #a08c6a;
   /* 令和カラー（書籍カバーのティール） */
-  --teal: #8FD9DA;
-  --teal-dark: #5ab8ba;
-  --teal-dim: rgba(143,217,218,0.15);
+  --teal: #5ab8ba;
+  --teal-dark: #3d9ea0;
+  --teal-dim: rgba(90,184,186,0.15);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -153,6 +153,7 @@ body::after {
   color: var(--teal);
   margin-bottom: 24px;
   text-transform: uppercase;
+  background: rgba(0,178,169,0.07); padding: 6px 20px; border-radius: 2px;
 }
 
 /* メインタイトル */
@@ -303,6 +304,7 @@ body::after {
   color: var(--teal);
   margin-bottom: 48px;
   display: flex; align-items: center; gap: 16px;
+  background: rgba(0,178,169,0.07); padding: 10px 16px; border-radius: 2px;
 }
 .section-title::before, .section-title::after {
   content: ''; flex: 1; height: 1px;
@@ -330,6 +332,7 @@ body::after {
   font-size: 13px; color: var(--teal);
   letter-spacing: 0.3em; margin-bottom: 10px;
   font-family: 'Noto Serif JP', serif;
+  background: rgba(0,178,169,0.07); display: inline-block; padding: 3px 10px; border-radius: 2px;
 }
 .category-name {
   font-family: 'Noto Serif JP', serif;
