@@ -835,7 +835,7 @@ const CAT_NAMES = {
 // ========== 4ゾーン定義 ==========
 const ZONES = [
   {
-    min: 86, max: 100,
+    min: 75, max: 100,
     cls: 'zone-1',
     badge: '🔴🔴 江戸朱子学OS',
     intro: 'あなたは、朱子学OSの影響をかなり強く受けています。',
@@ -844,7 +844,7 @@ const ZONES = [
     bookDesc: '「なんでこんなに生きるのがしんどいんだろう」——ずっとそう思ってきたなら、この本はあなたのために書きました。その生きづらさはあなたが弱いからではなく、400年前から続く構造が、あなたをそうさせてきただけです。その正体を知ることが、最初の一歩になります。'
   },
   {
-    min: 66, max: 85,
+    min: 50, max: 74,
     cls: 'zone-2',
     badge: '🔴 昭和レガシーOS',
     intro: 'あなたは、朱子学OSの影響を強く受けています。',
@@ -853,7 +853,7 @@ const ZONES = [
     bookDesc: '「自分さえ我慢すれば」「もっと頑張れば」——そう言い聞かせて、ここまで来たのではないでしょうか。その生き方は真面目さと言うより、江戸時代から刷り込まれた「従順さ」によるものかもしれません。この本は、あなたがその構造に気づき、少しずつ自分を取り戻すために書きました。'
   },
   {
-    min: 41, max: 65,
+    min: 25, max: 49,
     cls: 'zone-3',
     badge: '🟡 平成パッチOS',
     intro: 'あなたは、朱子学OSの影響を一定程度受けています。',
@@ -862,7 +862,7 @@ const ZONES = [
     bookDesc: '「なんかおかしい」と気づいている自分と、「でも合わせないと」と動いてしまう自分——その摩擦の正体は一体何なのか。今の生きづらさに名前をつけて、構造として理解しておくことが、これから先の自分を守る力になります。この本は、そのための羅針盤です。'
   },
   {
-    min: 0, max: 40,
+    min: 0, max: 24,
     cls: 'zone-4',
     badge: '🟢 令和2.0OS',
     intro: 'あなたは朱子学OSの影響が比較的少なく、自分の意思で人生を選択する傾向にあるようです。',
@@ -1036,7 +1036,7 @@ function render() {
   const patternSection = document.querySelector('.pattern-section');
   const dividerAfterScore = document.querySelectorAll('.divider')[0];
 
-  if (edoPct <= 40) {
+  if (edoPct <= 24) {
     patternSection.innerHTML = `
       <p style="font-family:'Noto Serif JP',serif; font-size:15px; color:var(--text-sub); line-height:2.2; text-align:center; padding: 20px 0;">
         朱子学OSの影響は比較的小さいようです。<br>
@@ -1078,7 +1078,7 @@ function render() {
   }
 
   // ゾーンメッセージ（健全領域は別テキスト）
-  const msgTemplate = edoPct <= 40 ? COMMON_MSG_HEALTHY : COMMON_MSG;
+  const msgTemplate = edoPct <= 24 ? COMMON_MSG_HEALTHY : COMMON_MSG;
   document.getElementById('zoneMsgBody').innerHTML =
     msgTemplate +
     `<div class="key-message">${zone.keyMessage}</div>` +
