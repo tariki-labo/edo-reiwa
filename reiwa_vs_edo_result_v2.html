@@ -136,6 +136,60 @@ body::after {
   margin-bottom: 0;
 }
 
+/* ========== ゾーンスペクトル ========== */
+.spectrum-section {
+  position: relative; z-index: 1;
+  padding: 0 20px 48px; max-width: 700px; margin: 0 auto;
+}
+.spectrum-title {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 13px; letter-spacing: 0.2em;
+  color: var(--text-dim); text-align: center;
+  margin-bottom: 20px;
+}
+.spectrum-wrap {
+  background: rgba(200,134,10,0.03);
+  border: 1px solid rgba(200,134,10,0.15);
+  border-radius: 4px;
+  padding: 32px 28px 28px;
+}
+.spectrum-bar {
+  position: relative;
+  height: 12px;
+  border-radius: 6px;
+  background: linear-gradient(to right, #007A73 0%, #5ab8ba 25%, #C8860A 60%, #8B4A0A 100%);
+  margin-bottom: 8px;
+}
+.spectrum-marker {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 22px; height: 22px;
+  background: var(--ink);
+  border: 3px solid #1a1208;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.spectrum-zone-labels {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+  margin-top: 28px;
+}
+.spectrum-zone-label {
+  text-align: center; padding: 10px 6px; border-radius: 3px;
+  font-family: 'Noto Serif JP', serif;
+  transition: opacity 0.3s;
+}
+.spectrum-zone-label.active {
+  background: rgba(200,134,10,0.08);
+  border: 1px solid rgba(200,134,10,0.25);
+}
+.spectrum-zone-label:not(.active) { opacity: 0.4; }
+.szl-emoji { display: block; font-size: 16px; margin-bottom: 6px; }
+.szl-name { display: block; font-size: 12px; font-weight: 700; color: var(--text-main); letter-spacing: 0.05em; line-height: 1.5; margin-bottom: 4px; }
+.szl-range { display: block; font-size: 11px; color: var(--text-dim); letter-spacing: 0.05em; }
+
 /* ========== 区切り ========== */
 .divider {
   position: relative; z-index: 1;
@@ -397,6 +451,38 @@ body::after {
   </div>
   <div class="zone-badge" id="zoneBadge"></div>
   <p class="zone-intro" id="zoneIntro"></p>
+</section>
+
+<!-- ゾーンスペクトル -->
+<section class="spectrum-section">
+  <p class="spectrum-title">あなたの思考OSは全4ゾーンのどこに位置する？</p>
+  <div class="spectrum-wrap">
+    <div class="spectrum-bar">
+      <div class="spectrum-marker" id="spectrumMarker"></div>
+    </div>
+    <div class="spectrum-zone-labels">
+      <div class="spectrum-zone-label" id="spectrumLabel0">
+        <span class="szl-emoji">🟢</span>
+        <span class="szl-name">令和2.0OS</span>
+        <span class="szl-range">0〜24点</span>
+      </div>
+      <div class="spectrum-zone-label" id="spectrumLabel1">
+        <span class="szl-emoji">🟡</span>
+        <span class="szl-name">平成パッチOS</span>
+        <span class="szl-range">25〜49点</span>
+      </div>
+      <div class="spectrum-zone-label" id="spectrumLabel2">
+        <span class="szl-emoji">🔴</span>
+        <span class="szl-name">昭和レガシーOS</span>
+        <span class="szl-range">50〜74点</span>
+      </div>
+      <div class="spectrum-zone-label" id="spectrumLabel3">
+        <span class="szl-emoji">🔴🔴</span>
+        <span class="szl-name">江戸朱子学OS</span>
+        <span class="szl-range">75〜100点</span>
+      </div>
+    </div>
+  </div>
 </section>
 
 <div class="divider"><div class="divider-line"></div><div class="divider-diamond"></div><div class="divider-line"></div></div>
@@ -769,7 +855,7 @@ const ZONES = [
   {
     min: 41, max: 65,
     cls: 'zone-3',
-    badge: '🟡 昭和・平成混在OS',
+    badge: '🟡 平成パッチOS',
     intro: 'あなたは、朱子学OSの影響を一定程度受けています。',
     keyMessage: `私たちが生きてきた社会では、上下関係を守る人が評価され、空気を読む人が重宝され、「すべき」を守る人が真面目だとされてきました。<br><br>その環境で摩擦を減らし、安全に生きるためには、そうした思考パターンを身につけることは合理的な選択でもありました。<br><br><strong>あなたは弱いわけではありません。環境に適応してきただけなのです。</strong><br><br>ただ、社会の形が少しずつ変わっている今、その江戸の「当たり前」をこれからも常に最優先にする必要があるのかどうかは、一度立ち止まって考えてもいいのかもしれません。<br><br>今回の分析は、その入り口です。`,
     shareText: '「性格の問題」じゃないかもしれないって視点、ちょっと面白い。\n#朱子ハラ #生きづらさ',
@@ -914,6 +1000,19 @@ function render() {
   document.getElementById('zoneBadge').className = `zone-badge ${zone.cls}`;
   document.getElementById('zoneBadge').textContent = zone.badge;
   document.getElementById('zoneIntro').textContent = zone.intro;
+
+  // ゾーンスペクトル初期化
+  document.getElementById('spectrumMarker').style.left = `${edoPct}%`;
+  const spectrumRanges = [
+    { id: 'spectrumLabel0', min: 0,  max: 24  },
+    { id: 'spectrumLabel1', min: 25, max: 49  },
+    { id: 'spectrumLabel2', min: 50, max: 74  },
+    { id: 'spectrumLabel3', min: 75, max: 100 }
+  ];
+  spectrumRanges.forEach(({ id, min, max }) => {
+    const el = document.getElementById(id);
+    el.classList.toggle('active', edoPct >= min && edoPct <= max);
+  });
 
   // カテゴリースコアを降順ソート
   const catArray = Object.entries(catScores).map(([id, cs]) => ({
