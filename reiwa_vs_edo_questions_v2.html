@@ -223,26 +223,6 @@ body::after {
 }
 .btn-prev:disabled { opacity: 0.2; cursor: default; }
 
-.btn-next {
-  padding: 14px 40px;
-  background: linear-gradient(135deg, #C8860A, #9A6508);
-  border: none; border-radius: 2px;
-  color: #fff;
-  font-family: 'Noto Serif JP', serif;
-  font-size: 15px; font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s;
-  letter-spacing: 0.15em;
-  box-shadow: 0 4px 20px rgba(200,134,10,0.3);
-  opacity: 0.4; pointer-events: none;
-}
-.btn-next.active {
-  opacity: 1; pointer-events: auto;
-}
-.btn-next.active:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(200,134,10,0.5);
-}
 
 /* ========== カテゴリー区切り演出 ========== */
 .category-transition {
@@ -367,7 +347,6 @@ body::after {
     <div class="choices" id="choices"></div>
     <div class="nav-btns">
       <button class="btn-prev" id="btnPrev" onclick="prevQuestion()" disabled>← 戻る</button>
-      <button class="btn-next" id="btnNext" onclick="nextQuestion()">次へ →</button>
     </div>
   </div>
 </main>
@@ -483,7 +462,6 @@ SHUFFLED_CATEGORIES.forEach(cat => {
 
 let currentIdx = 0;
 let answers = new Array(ALL_QUESTIONS.length).fill(null);
-let selectedScore = null;
 
 function render() {
   const q = ALL_QUESTIONS[currentIdx];
@@ -520,35 +498,20 @@ function render() {
     choicesEl.appendChild(btn);
   });
 
-  // 次へボタン
-  selectedScore = answers[currentIdx];
-  updateNextBtn();
-
   // 戻るボタン
   document.getElementById('btnPrev').disabled = currentIdx === 0;
-
-  // 最終問かどうか
-  const nextBtn = document.getElementById('btnNext');
-  nextBtn.textContent = currentIdx === total - 1 ? '結果を見る →' : '次へ →';
 }
 
 function selectAnswer(score) {
   answers[currentIdx] = score;
-  selectedScore = score;
   document.querySelectorAll('.choice-btn').forEach((btn, i) => {
     btn.classList.toggle('selected', CHOICES[i].score === score);
   });
-  updateNextBtn();
 
   // 選択したら少し待って自動で次へ（UX向上）
   setTimeout(() => {
     if (answers[currentIdx] !== null) nextQuestion();
   }, 400);
-}
-
-function updateNextBtn() {
-  const btn = document.getElementById('btnNext');
-  btn.classList.toggle('active', selectedScore !== null);
 }
 
 function nextQuestion() {
