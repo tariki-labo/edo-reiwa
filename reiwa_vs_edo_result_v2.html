@@ -374,6 +374,8 @@ body::after {
 .btn-share.x:hover { background: #222; transform: translateY(-2px); }
 .btn-share.copy { background: transparent; border: 1px solid rgba(200,134,10,0.3); color: var(--text-sub); }
 .btn-share.copy:hover { border-color: rgba(200,134,10,0.6); color: var(--text-main); transform: translateY(-2px); }
+.btn-share.line { background: #06C755; color: #fff; box-shadow: 0 2px 12px rgba(6,199,85,0.35); }
+.btn-share.line:hover { background: #05b34d; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(6,199,85,0.5); }
 .share-copied { font-size: 12px; color: var(--teal); margin-top: 12px; opacity: 0; transition: opacity 0.3s; }
 .share-copied.show { opacity: 1; }
 
@@ -535,6 +537,7 @@ body::after {
   <p class="share-title">結果をシェアする</p>
   <div class="share-btns">
     <button class="btn-share x" onclick="shareX()">𝕏 ポストする</button>
+    <button class="btn-share line" onclick="shareLine()">LINE シェア</button>
     <button class="btn-share copy" onclick="copyResult()">🔗 URLをコピー</button>
   </div>
   <p class="share-copied" id="shareCopied">コピーしました！</p>
@@ -1107,6 +1110,14 @@ function shareX() {
   const zone = ZONES.find(z => result.edoPct >= z.min && result.edoPct <= z.max) || ZONES[1];
   const text = `あなたの鬱は、徳川家康のせいです。\n\n令和脳 vs 江戸脳｜思考OSチェックをやってみました！\n\n令和脳 ${result.reiwaPct}% ／ 江戸脳 ${result.edoPct}%\n診断結果：${zone.badge}\n\nあなたの思考OSは何年製？\nhttps://maegawashinsuke3.github.io/edo-reiwa-check/\n#令和脳江戸脳 #思考OSチェック #朱子学ハラスメント #朱子ハラ`;
   window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank');
+}
+
+function shareLine() {
+  const result = getResult();
+  const zone = ZONES.find(z => result.edoPct >= z.min && result.edoPct <= z.max) || ZONES[1];
+  const text = `令和脳 vs 江戸脳｜思考OSチェックをやってみました！\n\n令和脳 ${result.reiwaPct}% ／ 江戸脳 ${result.edoPct}%\n診断結果：${zone.badge}\n\nあなたの思考OSは何年製？`;
+  const url = 'https://maegawashinsuke3.github.io/edo-reiwa-check/';
+  window.open(`https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
 }
 
 function copyResult() {
