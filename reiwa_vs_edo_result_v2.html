@@ -1115,7 +1115,7 @@ function shareX() {
 function shareLine() {
   const result = getResult();
   const zone = ZONES.find(z => result.edoPct >= z.min && result.edoPct <= z.max) || ZONES[1];
-  const text = `令和脳 vs 江戸脳｜思考OSチェックをやってみました！\n\n令和脳 ${result.reiwaPct}% ／ 江戸脳 ${result.edoPct}%\n診断結果：${zone.badge}\n\nあなたの思考OSは何年製？`;
+  const text = `『我慢が美徳』『空気読め』…それって江戸時代の価値観かも。自分の思考OSを診断してみた👇`;
   const url = 'https://maegawashinsuke3.github.io/edo-reiwa-check/';
   window.open(`https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
 }
