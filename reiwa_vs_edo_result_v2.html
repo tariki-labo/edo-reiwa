@@ -999,6 +999,33 @@ const COMMON_MSG = `
 
 // ========== スコア取得 ==========
 function getResult() {
+  // 1. クエリパラメータからスコアを取得
+  const params = new URLSearchParams(window.location.search);
+  const qReiwa = params.get('reiwa');
+  const qEdo = params.get('edo');
+  if (qReiwa !== null && qEdo !== null) {
+    const reiwaPct = parseInt(qReiwa, 10);
+    const edoPct = parseInt(qEdo, 10);
+    if (!isNaN(reiwaPct) && !isNaN(edoPct)) {
+      // クエリパラメータにはcatScoresがないのでダミーを返す
+      try {
+        const stored = sessionStorage.getItem('checkResult');
+        if (stored) {
+          const s = JSON.parse(stored);
+          if (s.reiwaPct === reiwaPct && s.edoPct === edoPct) return s;
+        }
+      } catch(e) {}
+      return { reiwaPct, edoPct, catScores: {
+        1: { name: '権威服従', total: 0, count: 3 },
+        2: { name: '集団同調', total: 0, count: 3 },
+        3: { name: '課題の混同', total: 0, count: 3 },
+        4: { name: '自己否定', total: 0, count: 3 },
+        5: { name: '完璧主義', total: 0, count: 3 },
+        6: { name: '認知の硬直性', total: 0, count: 3 },
+      }};
+    }
+  }
+  // 2. sessionStorageから取得
   try {
     const stored = sessionStorage.getItem('checkResult');
     if (stored) return JSON.parse(stored);
@@ -1017,10 +1044,20 @@ function getResult() {
   };
 }
 
+function getShareUrl() {
+  const result = getResult();
+  const base = window.location.origin + window.location.pathname;
+  return `${base}?reiwa=${result.reiwaPct}&edo=${result.edoPct}`;
+}
+
 // ========== 描画 ==========
 function render() {
   const result = getResult();
   const { edoPct, reiwaPct, catScores } = result;
+
+  // URLにスコアパラメータを反映
+  const newUrl = `${window.location.pathname}?reiwa=${reiwaPct}&edo=${edoPct}`;
+  history.replaceState(null, '', newUrl);
 
   // スコアカウントアップ
   animateCount('reiwaPct', reiwaPct);
@@ -1157,7 +1194,7 @@ function shareLine() {
 }
 
 function copyResult() {
-  navigator.clipboard.writeText(window.location.href).then(() => {
+  navigator.clipboard.writeText(getShareUrl()).then(() => {
     const el = document.getElementById('shareCopied');
     el.classList.add('show');
     setTimeout(() => el.classList.remove('show'), 2500);
