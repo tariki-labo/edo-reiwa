@@ -406,6 +406,15 @@ body::after {
 .insta-caption-copied { font-size: 12px; color: var(--teal); margin-top: 10px; opacity: 0; transition: opacity 0.3s; }
 .insta-caption-copied.show { opacity: 1; }
 
+.kizuki-wrap { margin-top: 32px; border-top: 1px solid rgba(200,134,10,0.15); padding-top: 28px; }
+.kizuki-label { font-family: 'Noto Serif JP', serif; font-size: 16px; font-weight: 700; color: var(--gold-pale); text-align: center; margin-bottom: 16px; letter-spacing: 0.1em; }
+.kizuki-preview-wrap { display: flex; justify-content: center; margin-bottom: 16px; }
+.kizuki-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.btn-share.kizuki-dl { background: linear-gradient(135deg, #C8860A, #e8a82a, #C8860A); color: #1a1208; font-weight: 700; box-shadow: 0 2px 12px rgba(200,134,10,0.35); }
+.btn-share.kizuki-dl:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(200,134,10,0.5); }
+.kizuki-caption-copied { font-size: 12px; color: var(--teal); margin-top: 10px; text-align: center; opacity: 0; transition: opacity 0.3s; }
+.kizuki-caption-copied.show { opacity: 1; }
+
 .footer {
   position: relative; z-index: 1;
   padding: 24px 40px; border-top: 1px solid rgba(200,134,10,0.1); text-align: center;
@@ -541,6 +550,19 @@ body::after {
     <button class="btn-share copy" onclick="copyResult()">🔗 URLをコピー</button>
   </div>
   <p class="share-copied" id="shareCopied">コピーしました！</p>
+
+  <!-- 気づきカード -->
+  <div class="kizuki-wrap">
+    <p class="kizuki-label">あなたの気づきカード</p>
+    <div class="kizuki-preview-wrap">
+      <canvas id="kizukiCanvas" style="border-radius:4px; max-width:280px; width:100%;"></canvas>
+    </div>
+    <div class="kizuki-btns">
+      <button class="btn-share kizuki-dl" onclick="downloadKizukiImage()">📸 画像を保存</button>
+      <button class="btn-share caption" onclick="copyKizukiCaption()">📋 キャプションをコピー</button>
+    </div>
+    <p class="kizuki-caption-copied" id="kizukiCaptionCopied">キャプションをコピーしました！</p>
+  </div>
 
   <!-- インスタ用 -->
   <div class="insta-wrap">
@@ -832,7 +854,7 @@ const PATTERNS = {
 // ========== カテゴリー名 ==========
 const CAT_NAMES = {
   1: '権威服従', 2: '集団同調', 3: '課題の混同',
-  4: '自己否定', 5: '完璧主義', 6: '認知の硬直性'
+  4: '自己否定', 5: '完璧主義', 6: '認知の硬直性', 7: '恥の文化・世間体'
 };
 
 // ========== 4ゾーン定義 ==========
@@ -843,7 +865,7 @@ const ZONES = [
     badge: '🔴🔴 江戸朱子学OS',
     intro: 'あなたは、朱子学OSの影響をかなり強く受けています。',
     keyMessage: `もし今、強い苦しさを感じているなら、それは、あなたの努力不足ではありません。長い間、自分よりも周囲を優先し、「こうあるべき」に応え続けてきた結果かもしれません。<br><br>まず大切なのは、<strong>これ以上自分を責めないことです。</strong><br><br>そして、もう一つお伝えしたいことがあります。<br><br>この苦しさには、<strong>構造的な原因があります。</strong>江戸時代から400年かけて刷り込まれた「朱子学OS」が、今もあなたの中で動き続けているだけです。原因がわかれば、変われます。あなたの性格の問題ではないからです。<br><br>もし日常生活に支障が出ている場合は、専門機関への相談も大切な選択肢です。そして少し落ち着いたとき、<strong>「なぜ自分はこうなのか」をもっと深く知りたい</strong>と思ったなら、ぜひこの後の書籍案内を読んでみてください。一人で抱えなくて大丈夫です。`,
-    shareText: '少し考えさせられた。\n#朱子ハラ',
+    shareText: 'あなたの鬱は、徳川家康のせいです。\n\n令和脳vs江戸脳チェック、やってみた。\n令和脳 {{reiwaPct}}% ／ 江戸脳 {{edoPct}}%\n\n「空気を読め」「我慢しろ」「親に従え」\n——それ、江戸幕府が260年かけて仕込んだ"掟"だったらしい。\n性格のせいだと思ってたけど、江戸時代からの刷り込みだった。\n\nhttps://tariki-labo.github.io/edo-reiwa/reiwa_vs_edo_top_v2.html\n#朱子ハラ #思考OSチェック #朱子学ハラスメント',
     bookDesc: '「なんでこんなに生きるのがしんどいんだろう」——ずっとそう思ってきたなら、この本はあなたのために書きました。その生きづらさはあなたが弱いからではなく、400年前から続く構造が、あなたをそうさせてきただけです。その正体を知ることが、最初の一歩になります。'
   },
   {
@@ -852,7 +874,7 @@ const ZONES = [
     badge: '🔴 昭和レガシーOS',
     intro: 'あなたは、朱子学OSの影響を強く受けています。',
     keyMessage: `もし、今回の結果を見て「しんどいな」と感じたなら、それは、あなたが弱いからではありません。長い間、周囲の期待に応え、空気を読み、「正しさ」に忠実であろうとしてきたからです。<br><br>それは「真面目さ」と言うより、「従順さ」と言えるのではないでしょうか。<br><br>そしてその「従順さ」は、あなたが自分で選んだものではなく、江戸時代から約400年かけて刷り込まれた「朱子学OS」が、気づかないうちにそうさせてきたのです。<br><br>それは、あなたの欠陥ではなく、構造による摩擦です。<br><br>その「構造」の正体を知ることが、変化の第一歩になります。まずは「気づいた」という事実を大切にしながら、ぜひこの後の書籍案内も読んでみてください。`,
-    shareText: '少し考えさせられた。\n#朱子ハラ',
+    shareText: 'あなたの鬱は、徳川家康のせいです。\n\n令和脳vs江戸脳チェック、やってみた。\n令和脳 {{reiwaPct}}% ／ 江戸脳 {{edoPct}}%\n\n「空気を読め」「我慢しろ」「目上に従え」\n——この"掟"、江戸幕府が400年前に仕込んだものらしい。\n性格だと思ってたけど、江戸時代からの刷り込みだったのかも。\n\nhttps://tariki-labo.github.io/edo-reiwa/reiwa_vs_edo_top_v2.html\n#朱子ハラ #思考OSチェック #朱子学ハラスメント',
     bookDesc: '「自分さえ我慢すれば」「もっと頑張れば」——そう言い聞かせて、ここまで来たのではないでしょうか。その生き方は真面目さと言うより、江戸時代から刷り込まれた「従順さ」によるものかもしれません。この本は、あなたがその構造に気づき、少しずつ自分を取り戻すために書きました。'
   },
   {
@@ -861,7 +883,7 @@ const ZONES = [
     badge: '🟡 平成パッチOS',
     intro: 'あなたは、朱子学OSの影響を一定程度受けています。',
     keyMessage: `私たちが生きてきた社会では、上下関係を守る人が評価され、空気を読む人が重宝され、「すべき」を守る人が真面目だとされてきました。<br><br>その環境で摩擦を減らし、安全に生きるためには、そうした思考パターンを身につけることは合理的な選択でもありました。<br><br><strong>あなたは弱いわけではありません。環境に適応してきただけなのです。</strong><br><br>ただ、社会の形が少しずつ変わっている今、その江戸の「当たり前」をこれからも常に最優先にする必要があるのかどうかは、一度立ち止まって考えてもいいのかもしれません。<br><br>今回の分析は、その入り口です。`,
-    shareText: '「性格の問題」じゃないかもしれないって視点、ちょっと面白い。\n#朱子ハラ #生きづらさ',
+    shareText: 'あなたの鬱は、徳川家康のせいです。\n\n令和脳vs江戸脳チェック、やってみた。\n令和脳 {{reiwaPct}}% ／ 江戸脳 {{edoPct}}%\n\n「なんかおかしい」と思いつつ、合わせてしまう自分がいる。\nその摩擦の正体、江戸時代のOS（思想）かもしれない。\n\nhttps://tariki-labo.github.io/edo-reiwa/reiwa_vs_edo_top_v2.html\n#朱子ハラ #思考OSチェック',
     bookDesc: '「なんかおかしい」と気づいている自分と、「でも合わせないと」と動いてしまう自分——その摩擦の正体は一体何なのか。今の生きづらさに名前をつけて、構造として理解しておくことが、これから先の自分を守る力になります。この本は、そのための羅針盤です。'
   },
   {
@@ -870,10 +892,21 @@ const ZONES = [
     badge: '🟢 令和2.0OS',
     intro: 'あなたは朱子学OSの影響が比較的少なく、自分の意思で人生を選択する傾向にあるようです。',
     keyMessage: `あなたは、朱子学OSの影響を比較的受けにくい傾向にあります。<br><br>それは、周囲の空気や上下関係よりも、<strong>自分の感覚を大切にできているということかもしれません。</strong><br><br>ただ、社会全体がそうとは限りません。<br><br>もし、生きづらさが「性格」ではなく社会の構造から生まれる側面もあるとしたら。<br><br>この視点は、あなた自身だけでなく、周囲の人を理解するヒントにもなるかもしれません。`,
-    shareText: '朱子学OSチェックをやってみた。思った以上に「構造」の話だった。\n#朱子ハラ #朱子学OS',
+    shareText: 'あなたの鬱は、徳川家康のせいです。\n\n令和脳vs江戸脳チェック、やってみた。\n令和脳 {{reiwaPct}}% ／ 江戸脳 {{edoPct}}%\n\n自分はわりと自由に生きてるつもりだったけど、\n周りの人の「生きづらさ」の正体が少し見えた気がする。\nそうか、根源は江戸時代にあったのか。\n\nhttps://tariki-labo.github.io/edo-reiwa/reiwa_vs_edo_top_v2.html\n#朱子ハラ #思考OSチェック',
     bookDesc: 'あなたは、この構造から比較的自由に生きられているようです。ただ、あなたの周りには「なぜこんなにしんどいのか」がわからないまま苦しんでいる人がいるかもしれません。また、あなた自身のOSは新しくても、そうした周囲の環境が朱子学OSで動いていると、それだけで消耗することもあります。職場・家族・パートナー——誰かとの関係に違和感を感じているなら、一度この本を手に取ってみてください。相手のOSを理解するヒントが、この本の中にあります。'
   }
 ];
+
+// ========== 気づきカードメッセージ ==========
+const KIZUKI_MESSAGES = {
+  1: '「目上の人に逆らえない」のは、あなたが弱いからじゃない。江戸幕府が260年かけて仕込んだ"掟"が、まだ動いているだけです。',
+  2: '「空気が読めないと怖い」のは、あなたが臆病だからじゃない。"和を乱すな"という江戸の掟が、今もあなたを縛っているだけです。',
+  3: '「他人の問題まで背負ってしまう」のは、あなたがお人よしだからじゃない。江戸時代の古いOS（思想）にある「滅私奉公（めっしほうこう）」という掟が、「自分の問題」と「他人の問題」をごちゃまぜにしているだけです。',
+  4: '「自分はダメだ」と思うのは、あなたが本当にダメだからじゃない。江戸の掟が支配する社会では、自分を責める人の方が「従順で扱いやすい」と重宝された。その名残で、自分を低く見積もる癖が残っているだけです。',
+  5: '「完璧じゃないと怖い」のは、あなたの性格じゃない。「失敗＝恥」という江戸の掟が、80点の自分を許さないだけです。',
+  6: '「〜すべき」が頭から離れないのは、あなたが頑固だからじゃない。江戸時代から続く変化を許さない"正しさ"が、柔軟さにブレーキをかけているだけです。',
+  7: '「人にどう見られるか」が気になるのは、あなたが気にしすぎだからじゃない。江戸時代から続く"恥の文化"という監視装置が、まだ作動しているだけです。'
+};
 
 // 共通メッセージ（健全領域用）
 const COMMON_MSG_HEALTHY = `
@@ -1092,6 +1125,9 @@ function render() {
 
   // インスタ用canvas初期化
   initInstaCanvas();
+
+  // 気づきカード初期化
+  initKizukiCanvas();
 }
 
 function animateCount(id, target) {
@@ -1108,15 +1144,15 @@ function animateCount(id, target) {
 function shareX() {
   const result = getResult();
   const zone = ZONES.find(z => result.edoPct >= z.min && result.edoPct <= z.max) || ZONES[1];
-  const text = `あなたの鬱は、徳川家康のせいです。\n\n令和脳 vs 江戸脳｜思考OSチェックをやってみました！\n\n令和脳 ${result.reiwaPct}% ／ 江戸脳 ${result.edoPct}%\n診断結果：${zone.badge}\n\nあなたの思考OSは何年製？\nhttps://maegawashinsuke3.github.io/edo-reiwa-check/\n#令和脳江戸脳 #思考OSチェック #朱子学ハラスメント #朱子ハラ`;
+  const text = zone.shareText
+    .replace('{{reiwaPct}}', result.reiwaPct)
+    .replace('{{edoPct}}', result.edoPct);
   window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank');
 }
 
 function shareLine() {
-  const result = getResult();
-  const zone = ZONES.find(z => result.edoPct >= z.min && result.edoPct <= z.max) || ZONES[1];
-  const text = `『我慢が美徳』『空気読め』…それって江戸時代の価値観かも。自分の思考OSを診断してみた👇`;
-  const url = 'https://maegawashinsuke3.github.io/edo-reiwa-check/';
+  const text = 'これ、ちょっとやってみて。\n江戸時代の掟が令和の私たちのメンタルを壊しているらしい。\nその「江戸の掟」が自分の中にどれくらい残ってるか、３分でチェックできるよ。';
+  const url = 'https://tariki-labo.github.io/edo-reiwa/reiwa_vs_edo_top_v2.html';
   window.open(`https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
 }
 
@@ -1219,7 +1255,7 @@ function drawInstaCanvas(canvas, result, zone) {
   // URL
   ctx.font = `22px 'Noto Sans JP', sans-serif`;
   ctx.fillStyle = 'rgba(143,217,218,0.6)';
-  ctx.fillText('https://maegawashinsuke3.github.io/edo-reiwa-check/', S / 2, 830);
+  ctx.fillText('tariki-labo.github.io/edo-reiwa/', S / 2, 830);
 }
 
 function initInstaCanvas() {
@@ -1243,9 +1279,161 @@ function downloadInstaImage() {
 function copyInstaCaption() {
   const result = getResult();
   const zone = ZONES.find(z => result.edoPct >= z.min && result.edoPct <= z.max) || ZONES[1];
-  const text = `あなたの鬱は、徳川家康のせいです。\n\n令和脳 vs 江戸脳｜思考OSチェックをやってみました！\n\n令和脳 ${result.reiwaPct}% ／ 江戸脳 ${result.edoPct}%\n診断結果：${zone.badge}\n\nあなたの思考OSは何年製？\nhttps://maegawashinsuke3.github.io/edo-reiwa-check/\n.\n#令和脳江戸脳 #思考OSチェック #朱子学ハラスメント #朱子ハラ #生きづらさ #朱子学OS`;
+  const text = `あなたの鬱は、徳川家康のせいです。\n\n令和脳 vs 江戸脳｜思考OSチェックをやってみました！\n\n令和脳 ${result.reiwaPct}% ／ 江戸脳 ${result.edoPct}%\nチェック結果：${zone.badge}\n\nあなたの思考OSは何年製？\nhttps://tariki-labo.github.io/edo-reiwa/reiwa_vs_edo_top_v2.html\n.\n#朱子学ハラスメント #朱子ハラ #思考OSチェック #令和脳江戸脳 #生きづらさ #朱子学OS`;
   navigator.clipboard.writeText(text).then(() => {
     const el = document.getElementById('instaCaptionCopied');
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2500);
+  });
+}
+
+// ========== 気づきカード ==========
+function getTopCategory() {
+  const result = getResult();
+  const catScores = result.catScores;
+  let topId = 1, topPct = 0;
+  for (const [id, cs] of Object.entries(catScores)) {
+    const pct = Math.round(cs.total / cs.count);
+    if (pct > topPct) { topPct = pct; topId = parseInt(id); }
+  }
+  return topId;
+}
+
+function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+  const chars = text.split('');
+  let line = '';
+  let currentY = y;
+  for (let i = 0; i < chars.length; i++) {
+    const testLine = line + chars[i];
+    const metrics = ctx.measureText(testLine);
+    if (metrics.width > maxWidth && line.length > 0) {
+      ctx.fillText(line, x, currentY);
+      line = chars[i];
+      currentY += lineHeight;
+    } else {
+      line = testLine;
+    }
+  }
+  ctx.fillText(line, x, currentY);
+  return currentY;
+}
+
+function drawKizukiCard(canvas, catName, catMsg) {
+  const S = 1080;
+  canvas.width = S;
+  canvas.height = S;
+  const ctx = canvas.getContext('2d');
+
+  // 背景
+  ctx.fillStyle = '#1a1208';
+  ctx.fillRect(0, 0, S, S);
+
+  // ドットパターン
+  ctx.fillStyle = 'rgba(200,134,10,0.07)';
+  for (let x = 20; x < S; x += 40) {
+    for (let y = 20; y < S; y += 40) {
+      ctx.beginPath();
+      ctx.arc(x, y, 1.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  // 外枠
+  ctx.strokeStyle = 'rgba(200,134,10,0.25)';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(48, 48, S - 96, S - 96);
+
+  // 上部ライン装飾
+  const grad = ctx.createLinearGradient(100, 0, S - 100, 0);
+  grad.addColorStop(0, 'transparent');
+  grad.addColorStop(0.5, 'rgba(200,134,10,0.5)');
+  grad.addColorStop(1, 'transparent');
+  ctx.strokeStyle = grad;
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(100, 160); ctx.lineTo(S - 100, 160); ctx.stroke();
+
+  // 上部テキスト
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(160,140,106,0.7)';
+  ctx.font = "26px 'Noto Serif JP', serif";
+  ctx.fillText('あなたの中で一番強く動いていたOS', S / 2, 220);
+
+  // カテゴリー名（大きく）
+  ctx.fillStyle = '#f5e6c8';
+  ctx.font = "bold 64px 'Noto Serif JP', serif";
+  ctx.fillText(catName, S / 2, 330);
+
+  // 区切りダイヤ
+  ctx.save();
+  ctx.translate(S / 2, 390);
+  ctx.rotate(Math.PI / 4);
+  ctx.fillStyle = '#C8860A';
+  ctx.fillRect(-6, -6, 12, 12);
+  ctx.restore();
+
+  // メッセージ本文（自動折り返し）
+  ctx.fillStyle = '#f0e4cc';
+  ctx.font = "28px 'Noto Serif JP', serif";
+  ctx.textAlign = 'center';
+  const lastY = wrapText(ctx, catMsg, S / 2, 470, S - 200, 46);
+
+  // 下部ライン装飾
+  const bottomLineY = Math.max(lastY + 60, 750);
+  const grad2 = ctx.createLinearGradient(100, 0, S - 100, 0);
+  grad2.addColorStop(0, 'transparent');
+  grad2.addColorStop(0.5, 'rgba(200,134,10,0.5)');
+  grad2.addColorStop(1, 'transparent');
+  ctx.strokeStyle = grad2;
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(100, bottomLineY); ctx.lineTo(S - 100, bottomLineY); ctx.stroke();
+
+  // 「それは、あなたの性格のせいじゃありません。」
+  ctx.fillStyle = '#5ab8ba';
+  ctx.font = "bold 30px 'Noto Serif JP', serif";
+  ctx.textAlign = 'center';
+  ctx.fillText('それは、あなたの性格のせいじゃありません。', S / 2, bottomLineY + 60);
+
+  // 最下部
+  ctx.fillStyle = 'rgba(160,140,106,0.7)';
+  ctx.font = "24px 'Noto Serif JP', serif";
+  ctx.fillText('令和脳vs江戸脳 思考OSチェック', S / 2, S - 160);
+
+  ctx.font = "20px 'Noto Sans JP', sans-serif";
+  ctx.fillStyle = 'rgba(143,217,218,0.6)';
+  ctx.fillText('tariki-labo.github.io/edo-reiwa/', S / 2, S - 120);
+
+  ctx.fillStyle = 'rgba(200,134,10,0.5)';
+  ctx.font = "22px 'Noto Sans JP', sans-serif";
+  ctx.fillText('#朱子ハラ', S / 2, S - 85);
+}
+
+function initKizukiCanvas() {
+  const topCatId = getTopCategory();
+  const catName = CAT_NAMES[topCatId] || '権威服従';
+  const catMsg = KIZUKI_MESSAGES[topCatId] || KIZUKI_MESSAGES[1];
+  const canvas = document.getElementById('kizukiCanvas');
+  if (canvas) drawKizukiCard(canvas, catName, catMsg);
+}
+
+function downloadKizukiImage() {
+  const topCatId = getTopCategory();
+  const catName = CAT_NAMES[topCatId] || '権威服従';
+  const catMsg = KIZUKI_MESSAGES[topCatId] || KIZUKI_MESSAGES[1];
+  const offscreen = document.createElement('canvas');
+  drawKizukiCard(offscreen, catName, catMsg);
+  const a = document.createElement('a');
+  a.href = offscreen.toDataURL('image/png');
+  a.download = '気づきカード_' + catName + '.png';
+  a.click();
+}
+
+function copyKizukiCaption() {
+  const topCatId = getTopCategory();
+  const catName = CAT_NAMES[topCatId] || '権威服従';
+  const catMsg = KIZUKI_MESSAGES[topCatId] || KIZUKI_MESSAGES[1];
+  const text = `あなたの中で一番強く動いていたOS：${catName}\n\n${catMsg}\n\nそれは、あなたの性格のせいじゃありません。\n\n令和脳vs江戸脳 思考OSチェック\nhttps://tariki-labo.github.io/edo-reiwa/reiwa_vs_edo_top_v2.html\n.\n#朱子学ハラスメント #朱子ハラ #思考OSチェック`;
+  navigator.clipboard.writeText(text).then(() => {
+    const el = document.getElementById('kizukiCaptionCopied');
     el.classList.add('show');
     setTimeout(() => el.classList.remove('show'), 2500);
   });

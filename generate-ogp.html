@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OGP画像ジェネレーター</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;700;900&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  body { background: #1a1208; color: #f0e4cc; font-family: 'Noto Sans JP', sans-serif; display: flex; flex-direction: column; align-items: center; padding: 40px 20px; }
+  h1 { font-family: 'Noto Serif JP', serif; margin-bottom: 20px; }
+  canvas { border: 1px solid rgba(200,134,10,0.3); max-width: 100%; }
+  button { margin-top: 20px; padding: 14px 32px; font-size: 16px; font-weight: 700; background: linear-gradient(135deg, #C8860A, #e8a82a); color: #1a1208; border: none; border-radius: 8px; cursor: pointer; }
+  button:hover { transform: translateY(-2px); }
+  p { margin-top: 12px; font-size: 13px; color: rgba(160,140,106,0.7); }
+</style>
+</head>
+<body>
+<h1>OGP画像ジェネレーター</h1>
+<canvas id="ogpCanvas"></canvas>
+<button onclick="downloadOGP()">ogp.png をダウンロード</button>
+<p>ダウンロード後、リポジトリのルートに配置してください。</p>
+
+<script>
+function drawOGP() {
+  const canvas = document.getElementById('ogpCanvas');
+  const W = 1200, H = 630;
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  // 背景
+  ctx.fillStyle = '#1a1208';
+  ctx.fillRect(0, 0, W, H);
+
+  // ドットパターン
+  ctx.fillStyle = 'rgba(200,134,10,0.07)';
+  for (let x = 20; x < W; x += 40) {
+    for (let y = 20; y < H; y += 40) {
+      ctx.beginPath();
+      ctx.arc(x, y, 1.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  // 外枠
+  ctx.strokeStyle = 'rgba(200,134,10,0.25)';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(32, 32, W - 64, H - 64);
+
+  // 上部ライン装飾
+  const grad = ctx.createLinearGradient(80, 0, W - 80, 0);
+  grad.addColorStop(0, 'transparent');
+  grad.addColorStop(0.5, 'rgba(200,134,10,0.5)');
+  grad.addColorStop(1, 'transparent');
+  ctx.strokeStyle = grad;
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(80, 100); ctx.lineTo(W - 80, 100); ctx.stroke();
+
+  // メインコピー
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#f5e6c8';
+  ctx.font = "bold 56px 'Noto Serif JP', serif";
+  ctx.fillText('あなたの鬱は、', W / 2, 230);
+  ctx.fillText('徳川家康のせいです。', W / 2, 306);
+
+  // 区切りダイヤ
+  ctx.save();
+  ctx.translate(W / 2, 366);
+  ctx.rotate(Math.PI / 4);
+  ctx.fillStyle = '#C8860A';
+  ctx.fillRect(-7, -7, 14, 14);
+  ctx.restore();
+
+  // サブコピー
+  ctx.fillStyle = 'rgba(160,140,106,0.8)';
+  ctx.font = "28px 'Noto Serif JP', serif";
+  ctx.fillText('令和脳vs江戸脳 思考OSチェック｜全21問・約3分・無料', W / 2, 440);
+
+  // 下部ライン装飾
+  const grad2 = ctx.createLinearGradient(80, 0, W - 80, 0);
+  grad2.addColorStop(0, 'transparent');
+  grad2.addColorStop(0.5, 'rgba(200,134,10,0.5)');
+  grad2.addColorStop(1, 'transparent');
+  ctx.strokeStyle = grad2;
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(80, H - 100); ctx.lineTo(W - 80, H - 100); ctx.stroke();
+
+  // URL
+  ctx.font = "20px 'Noto Sans JP', sans-serif";
+  ctx.fillStyle = 'rgba(143,217,218,0.6)';
+  ctx.fillText('tariki-labo.github.io/edo-reiwa/', W / 2, H - 60);
+}
+
+function downloadOGP() {
+  const canvas = document.getElementById('ogpCanvas');
+  const a = document.createElement('a');
+  a.href = canvas.toDataURL('image/png');
+  a.download = 'ogp.png';
+  a.click();
+}
+
+// フォント読み込み後に描画
+document.fonts.ready.then(() => drawOGP());
+</script>
+</body>
+</html>
