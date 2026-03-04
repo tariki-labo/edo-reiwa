@@ -1151,9 +1151,9 @@ function shareX() {
 }
 
 function shareLine() {
-  const text = 'これ、ちょっとやってみて。\n江戸時代の掟が令和の私たちのメンタルを壊しているらしい。\nその「江戸の掟」が自分の中にどれくらい残ってるか、３分でチェックできるよ。';
   const url = 'https://tariki-labo.github.io/edo-reiwa/reiwa_vs_edo_top_v2.html';
-  window.open(`https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
+  const text = 'これ、ちょっとやってみて。\n江戸時代の掟が令和の私たちのメンタルを壊しているらしい。\nその「江戸の掟」が自分の中にどれくらい残ってるか、３分でチェックできるよ。\n' + url;
+  window.open(`https://line.me/R/share?text=${encodeURIComponent(text)}`, '_blank');
 }
 
 function copyResult() {
