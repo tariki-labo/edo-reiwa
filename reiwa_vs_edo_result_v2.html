@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-12W0CMVX96"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-12W0CMVX96');
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>令和脳 vs 江戸脳｜チェック結果</title>
@@ -534,7 +542,7 @@ body::after {
       <h3 class="book-title">もう、親孝行はやめなはれ</h3>
       <p class="book-author">著：前川進介</p>
       <p class="book-desc" id="bookDesc"></p>
-      <a href="https://example.com/ebook" class="btn-book">📖 書籍の詳細を見る</a>
+      <a href="https://example.com/ebook" class="btn-book" onclick="gtag('event', 'click_book_link', { 'event_category': 'conversion', 'result_zone': document.getElementById('zoneBadge').textContent.trim() });">📖 書籍の詳細を見る</a>
     </div>
   </div>
 </section>
@@ -1070,6 +1078,18 @@ function render() {
 
   // ゾーン判定
   const zone = ZONES.find(z => edoPct >= z.min && edoPct <= z.max) || ZONES[1];
+
+  // GA4: ゾーン別結果表示イベント
+  const zoneLabel = edoPct >= 75 ? 'zone1_edo_jusha' :
+                    edoPct >= 50 ? 'zone2_showa_legacy' :
+                    edoPct >= 25 ? 'zone3_heisei_patch' : 'zone4_reiwa_2_0';
+  gtag('event', 'view_result', {
+    'event_category': 'engagement',
+    'result_zone': zoneLabel,
+    'edo_pct': edoPct,
+    'reiwa_pct': reiwaPct
+  });
+
   document.getElementById('zoneBadge').className = `zone-badge ${zone.cls}`;
   document.getElementById('zoneBadge').textContent = zone.badge;
   document.getElementById('zoneIntro').textContent = zone.intro;
