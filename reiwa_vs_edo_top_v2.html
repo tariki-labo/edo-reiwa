@@ -351,7 +351,12 @@ body::after {
 .category-name {
   font-family: 'Noto Serif JP', serif;
   font-size: 20px; font-weight: 700;
-  color: var(--text-main); margin-bottom: 10px;
+  color: var(--text-main); margin-bottom: 4px;
+}
+.category-subtitle {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 14px; font-weight: 500;
+  color: var(--text-sub); margin-bottom: 10px;
 }
 .category-desc {
   font-size: 14px; color: var(--text-sub);
@@ -542,10 +547,10 @@ body::after {
   </div>
 
   <p class="hero-desc fade-in">
-    「親に従え」「空気を読め」「我慢が美徳」——<br>
+    「親に従え」「空気を読め」「我慢しろ」──<br>
     その<strong>「当たり前」</strong>、いつの時代のものですか？<br><br>
-    江戸幕府が仕込んだ思考の呪縛が、<br>
-    令和の今もあなたの脳内で動き続けているかもしれません。
+    江戸幕府が400年前に仕込んだ思考の呪縛が、<br>
+    令和の今もあなたの中で動いているかもしれません。
   </p>
 
   <div class="fade-in">
@@ -590,36 +595,43 @@ body::after {
     <div class="category-card">
       <div class="category-num">CAT. 01</div>
       <div class="category-name">権威服従</div>
+      <div class="category-subtitle">親は絶対</div>
       <div class="category-desc">権威あるものを絶対視し、<br>自分で判断することを避ける傾向</div>
     </div>
     <div class="category-card">
       <div class="category-num">CAT. 02</div>
       <div class="category-name">集団同調</div>
+      <div class="category-subtitle">みんなと一緒</div>
       <div class="category-desc">周囲と違う行動を取ることに<br>抵抗を感じる傾向</div>
     </div>
     <div class="category-card">
       <div class="category-num">CAT. 03</div>
       <div class="category-name">課題の混同</div>
-      <div class="category-desc">他人の問題を背負い込む、<br>または自分の考えを強要する傾向</div>
+      <div class="category-subtitle">それ、誰の課題？</div>
+      <div class="category-desc">上の人の問題を背負い込み、<br>下の人に自分の考えを押しつける傾向</div>
     </div>
     <div class="category-card">
       <div class="category-num">CAT. 04</div>
       <div class="category-name">自己否定</div>
+      <div class="category-subtitle">自分が悪い</div>
       <div class="category-desc">自分自身を否定的に捉え、<br>自己価値を認められない傾向</div>
     </div>
     <div class="category-card">
       <div class="category-num">CAT. 05</div>
       <div class="category-name">完璧主義</div>
-      <div class="category-desc">完璧な自分でなければという<br>プライドが強い傾向</div>
+      <div class="category-subtitle">ちゃんとしなきゃ</div>
+      <div class="category-desc">完璧でなければならないという<br>プレッシャーが強い傾向</div>
     </div>
     <div class="category-card">
       <div class="category-num">CAT. 06</div>
       <div class="category-name">認知の硬直性</div>
+      <div class="category-subtitle">昔からこう</div>
       <div class="category-desc">一度決めたルールに固執し、<br>柔軟に対応できない傾向</div>
     </div>
     <div class="category-card">
       <div class="category-num">CAT. 07</div>
-      <div class="category-name">恥の文化・世間体</div>
+      <div class="category-name">世間体・恥の文化</div>
+      <div class="category-subtitle">人の目が怖い</div>
       <div class="category-desc">他人の目線や世間体を<br>過剰に意識する傾向</div>
     </div>
   </div>
@@ -630,7 +642,7 @@ body::after {
   <div class="result-preview-inner">
     <div class="section-title">チェック結果イメージ</div>
     <p style="font-family:'Noto Serif JP',serif; color:var(--text-sub); font-size:14px; line-height:2;">
-      あなたの思考がどのくらい「江戸時代仕様」かを<br>
+      あなたの思考がどれくらい「江戸時代仕様」かを<br>
       スコアで可視化します。
     </p>
     <div class="result-score-demo">
@@ -648,9 +660,9 @@ body::after {
       <div class="score-bar-fill"></div>
     </div>
     <p style="font-size:15px; color:var(--text-sub); line-height:1.9; margin-top:16px;">
-      スコアに合わせた<strong style="color:var(--gold)">あなたへのメッセージ</strong>と、<br>
+      スコアに応じた<strong style="color:var(--gold)">メッセージ</strong>と、<br>
       7カテゴリーそれぞれの傾向もお伝えします。<br>
-      高スコアでも低スコアでも、それはあなたのせいではありません。
+      どんな結果でも、それはあなたのせいではありません。
     </p>
   </div>
 </section>
@@ -660,7 +672,7 @@ body::after {
   <div class="kamon" style="margin-bottom:32px;">
     <span class="kamon-icon">🏯</span>
   </div>
-  <p class="cta-bottom-text">さあ、あなたの思考OSを確認しましょう</p>
+  <p class="cta-bottom-text">さあ、あなたの思考OSをチェックしましょう</p>
   <p class="cta-bottom-sub">あなたの苦しさには、ちゃんと理由があります。</p>
   <div class="btn-start-wrap">
     <button class="btn-start" onclick="gtag('event', 'check_start', { 'event_category': 'engagement' }); location.href='reiwa_vs_edo_questions_v2.html'">
@@ -668,16 +680,15 @@ body::after {
       チェックをはじめる
     </button>
   </div>
-  <p class="btn-note">全21問・約3分・無料</p>
+  <p class="btn-note">全21問・約3分・無料・回答は保存されません</p>
 </section>
 
 <!-- フッター -->
 <footer class="footer">
   <p class="footer-copy">© 2026 NPO法人 他力本願研究所｜令和脳 vs 江戸脳 思考OSチェック</p>
   <div class="footer-links">
-    <a href="#">プライバシーポリシー</a>
-    <a href="#">お問い合わせ</a>
-    <a href="#">書籍について</a>
+    <a href="privacy.html">プライバシーポリシー</a>
+    <a href="contact.html">お問い合わせ</a>
   </div>
 </footer>
 
